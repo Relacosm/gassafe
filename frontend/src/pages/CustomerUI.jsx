@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { ClipboardList, Flame, Lock, Fingerprint, Copy, History, User, CheckCircle, AlertCircle, Activity } from "lucide-react";
+
 
 const API = "http://localhost:3001/api";
 
@@ -27,50 +29,78 @@ function RegisterForm({ onRegistered }) {
 
   return (
     <div className="card">
-      <div className="card-title">Register new connection</div>
+      <div className="card-title">
+        <ClipboardList size={22} className="sidebar-logo" />
+        New Connection Registration
+      </div>
+      
       <div className="input-row">
-        <div>
-          <label className="label">Full name</label>
-          <input className="input" placeholder="Ramesh Kumar" value={form.name} onChange={e => set("name", e.target.value)} />
+        <div className="form-group">
+          <label className="label">Full Name</label>
+          <input className="input" placeholder="e.g. Rajesh Sharma" value={form.name} onChange={e => set("name", e.target.value)} />
         </div>
-        <div>
-          <label className="label">Phone</label>
-          <input className="input" placeholder="+91 98765 43210" value={form.phone} onChange={e => set("phone", e.target.value)} />
+        <div className="form-group">
+          <label className="label">Mobile Number</label>
+          <input className="input" placeholder="+91 00000 00000" value={form.phone} onChange={e => set("phone", e.target.value)} />
         </div>
       </div>
-      <label className="label">Aadhaar number</label>
-      <input className="input" placeholder="XXXX XXXX XXXX" value={form.aadhaarNumber} onChange={e => set("aadhaarNumber", e.target.value)} />
-      <label className="label">Wallet address</label>
-      <input className="input" placeholder="0x..." value={form.walletAddress} onChange={e => set("walletAddress", e.target.value)} />
+      
+      <div className="form-group">
+        <label className="label">Aadhaar Identification</label>
+        <input className="input" placeholder="XXXX XXXX XXXX" value={form.aadhaarNumber} onChange={e => set("aadhaarNumber", e.target.value)} />
+      </div>
+
+      <div className="form-group">
+        <label className="label">Web3 Wallet Address</label>
+        <input className="input" placeholder="0x..." value={form.walletAddress} onChange={e => set("walletAddress", e.target.value)} />
+      </div>
+
       <div className="input-row">
-        <div>
-          <label className="label">Latitude</label>
+        <div className="form-group">
+          <label className="label">Service Latitude</label>
           <input className="input" value={form.lat} onChange={e => set("lat", e.target.value)} />
         </div>
-        <div>
-          <label className="label">Longitude</label>
+        <div className="form-group">
+          <label className="label">Service Longitude</label>
           <input className="input" value={form.lon} onChange={e => set("lon", e.target.value)} />
         </div>
       </div>
-      <label className="label">Pincode</label>
-      <input className="input" placeholder="411001" value={form.pincode} onChange={e => set("pincode", e.target.value)} />
 
-      <div className="zkp-notice">
-        ZKP — your Aadhaar is hashed locally and never stored. Only a cryptographic commitment is sent.
+      <div className="form-group">
+        <label className="label">Regional Pincode</label>
+        <input className="input" placeholder="411001" value={form.pincode} onChange={e => set("pincode", e.target.value)} />
       </div>
 
-      <button className="btn btn-green" onClick={submit} disabled={loading || !form.aadhaarNumber || !form.walletAddress}>
-        {loading ? <><span className="spin">⏳</span> Processing...</> : "Register & mint SBT"}
+      <div className="zkp-notice">
+        <Lock size={20} color="var(--brand-primary)" style={{ marginTop: '2px' }} />
+        <div>
+          <strong style={{ display: 'block', marginBottom: '4px' }}>Cryptographic Privacy</strong>
+          <div style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>Aadhaar data is hashed locally using ZKP protocol. Only the cryptographic commitment is recorded on the blockchain.</div>
+        </div>
+      </div>
+
+      <button className="btn btn-primary" onClick={submit} disabled={loading || !form.aadhaarNumber || !form.walletAddress} style={{ width: '100%' }}>
+        {loading ? <Activity size={18} className="spin" /> : <Fingerprint size={18} />}
+        {loading ? "Processing..." : "Register & Mint Connection SBT"}
       </button>
 
       {result && (
-        <div className={`alert ${result.success ? "alert-success" : "alert-error"}`} style={{ marginTop: 12 }}>
+        <div style={{ marginTop: 24 }}>
           {result.success ? (
-            <>SBT minted.<br />
-              <span className="mono">tx: {result.txHash}</span><br />
-              <span className="mono">trace: {result.traceId}</span>
-            </>
-          ) : result.error}
+            <div className="card" style={{ background: 'var(--success-soft)', borderColor: 'var(--success-border)', padding: '20px' }}>
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'center', color: 'var(--success)', marginBottom: '12px' }}>
+                <CheckCircle size={20} />
+                <strong style={{ fontSize: '15px' }}>Registration Verified</strong>
+              </div>
+              <div className="mono" style={{ display: 'block', marginBottom: '8px', fontSize: '11px', background: 'white' }}>Tx: {result.txHash}</div>
+              <div className="mono" style={{ display: 'block', fontSize: '11px', background: 'white' }}>Trace: {result.traceId}</div>
+            </div>
+          ) : (
+            <div style={{ color: 'var(--danger)', display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <AlertCircle size={18} />
+              {result.error}
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -82,7 +112,7 @@ function BookingPanel({ wallet }) {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
-  const [deviceId] = useState("DEVICE-" + Math.random().toString(36).slice(2, 10).toUpperCase());
+  const [deviceId] = useState("UID-" + Math.random().toString(36).slice(2, 10).toUpperCase());
 
   useEffect(() => {
     if (!wallet) return;
@@ -105,41 +135,91 @@ function BookingPanel({ wallet }) {
   }
 
   const tierBadge = t => t === 0
-    ? <span className="badge badge-green">GREEN</span>
-    : t === 1 ? <span className="badge badge-yellow">YELLOW</span>
-    : <span className="badge badge-red">RED</span>;
+    ? <span className="badge badge-green">VERIFIED SAFE</span>
+    : t === 1 ? <span className="badge badge-yellow">MANUAL REVIEW</span>
+    : <span className="badge badge-red">RESTRICTED ACCESS</span>;
 
   return (
-    <>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
       {user && (
-        <div className="card">
-          <div className="row-between" style={{ marginBottom: 16 }}>
+        <div className="card" style={{ background: 'white', borderLeft: '6px solid var(--brand-primary)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
             <div>
-              <div style={{ fontSize: 15, fontWeight: 500, marginBottom: 2 }}>{user.name}</div>
-              <div className="mono">{wallet}</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                <User size={18} color="var(--brand-primary)" />
+                <div style={{ fontSize: '20px', fontWeight: 700 }}>{user.name}</div>
+              </div>
+              <div className="mono" style={{ fontSize: '12px', background: 'var(--bg-secondary)' }}>{wallet}</div>
             </div>
             <div style={{ textAlign: "right" }}>
-              <div className="stat-val" style={{ color: "var(--green)" }}>{user.vouchersRemaining}</div>
-              <div className="stat-lbl">vouchers left</div>
+              <div className="stat-val">{user.vouchersRemaining}</div>
+              <div className="stat-lbl">Credits Left</div>
             </div>
           </div>
-          <button className="btn btn-green" onClick={book} disabled={loading || user.vouchersRemaining <= 0} style={{ width: "100%", justifyContent: "center", padding: "11px 0" }}>
-            {loading ? <><span className="spin">⏳</span> Scoring & locking escrow...</> : "Book gas cylinder"}
+          
+          <button className="btn btn-primary" onClick={book} disabled={loading || user.vouchersRemaining <= 0} style={{ width: "100%", padding: "16px" }}>
+            {loading ? <Activity size={20} className="spin" /> : <Flame size={20} />}
+            {loading ? "Analyzing Trust Metrics..." : "Initialize Cylinder Booking"}
           </button>
+
           {result && (
-            <div className={`alert ${result.success ? "alert-success" : "alert-error"}`} style={{ marginTop: 12 }}>
+            <div style={{ marginTop: 24 }}>
               {result.success ? (
-                <>
-                  Booking confirmed. Escrow locked onchain.<br />
-                  <div style={{ display: "flex", gap: 6, flexWrap: "wrap", margin: "6px 0" }}>
-                    <span className="mono">score: {result.fraudScore}/100</span>
+                <div className="card" style={{ background: 'var(--bg-secondary)', padding: '24px', border: '1px solid var(--border-primary)' }}>
+                  <div style={{ fontWeight: 700, fontSize: '18px', marginBottom: '16px', color: 'var(--brand-primary)' }}>Booking Authorized</div>
+                  <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 20 }}>
+                    <span className="badge badge-blue">Trust Score: {result.fraudScore}</span>
                     {tierBadge(result.riskTier)}
-                    <span className="badge badge-blue">{result.verificationRequired}</span>
                   </div>
-                  <span className="mono">id: {result.bookingId}</span><br />
-                  <span className="mono">tx: {result.escrowTxHash}</span>
-                </>
-              ) : result.error}
+
+                  {result.otp && (
+                    <div style={{
+                      margin: "24px 0",
+                      padding: "24px",
+                      background: "white",
+                      borderRadius: "var(--radius-md)",
+                      border: "1px solid var(--brand-primary-border)",
+                      boxShadow: "var(--shadow-md)"
+                    }}>
+                      <div style={{ fontSize: 11, color: "var(--text-tertiary)", fontWeight: 700, textTransform: "uppercase", marginBottom: '12px', letterSpacing: '0.05em' }}>
+                        Encrypted Delivery Token
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+                        <span style={{
+                          fontSize: '40px',
+                          fontWeight: 800,
+                          letterSpacing: '12px',
+                          color: "var(--brand-primary)",
+                          fontFamily: "JetBrains Mono, monospace",
+                        }}>
+                          {result.otp}
+                        </span>
+                        <button
+                          className="btn btn-outline"
+                          onClick={() => navigator.clipboard.writeText(result.otp)}
+                          style={{ padding: '8px 16px' }}
+                        >
+                          <Copy size={16} />
+                          Copy
+                        </button>
+                      </div>
+                      <div style={{ fontSize: '13px', color: "var(--text-secondary)", marginTop: 16 }}>
+                        Authorized personnel only. Share this token with the delivery agent to release assets.
+                      </div>
+                    </div>
+                  )}
+
+                  <div style={{ display: 'grid', gap: '8px' }}>
+                    <div className="mono" style={{ fontSize: '11px' }}>ID: {result.bookingId}</div>
+                    <div className="mono" style={{ fontSize: '11px' }}>Tx Hash: {result.escrowTxHash}</div>
+                  </div>
+                </div>
+              ) : (
+                <div className="alert-error" style={{ color: 'var(--danger)', padding: '16px', display: 'flex', gap: '10px' }}>
+                  <AlertCircle size={20} />
+                  {result.error}
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -147,44 +227,50 @@ function BookingPanel({ wallet }) {
 
       {bookings.length > 0 && (
         <div className="card">
-          <div className="card-title">My bookings</div>
-          <table>
-            <thead>
-              <tr>
-                <th>Booking ID</th>
-                <th>Date</th>
-                <th>Score</th>
-                <th>Tier</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {bookings.map(b => (
-                <tr key={b.bookingId}>
-                  <td className="mono">{b.bookingId}</td>
-                  <td style={{ color: "var(--text2)", fontSize: 12 }}>{new Date(b.createdAt).toLocaleDateString()}</td>
-                  <td>
-                    <span className="mono">{b.fraudScore}</span>
-                    <div className="score-bar">
-                      <div className="score-fill" style={{
-                        width: `${b.fraudScore}%`,
-                        background: b.fraudScore > 75 ? "var(--red)" : b.fraudScore > 30 ? "var(--amber)" : "var(--green)"
-                      }} />
-                    </div>
-                  </td>
-                  <td>{tierBadge(b.riskTier)}</td>
-                  <td>
-                    <span className={`badge ${b.status === "DELIVERED" ? "badge-green" : b.status === "PENDING" ? "badge-yellow" : "badge-gray"}`}>
-                      {b.status}
-                    </span>
-                  </td>
+          <div className="card-title">
+            <History size={20} className="sidebar-logo" />
+            Booking History
+          </div>
+          <div style={{ overflowX: 'auto' }}>
+            <table>
+              <thead>
+                <tr>
+                  <th>Booking Reference</th>
+                  <th>Timestamp</th>
+                  <th>Trust Assessment</th>
+                  <th>Status</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {bookings.map(b => (
+                  <tr key={b.bookingId}>
+                    <td className="mono" style={{ fontSize: '11px' }}>{b.bookingId.slice(0, 16)}...</td>
+                    <td style={{ color: "var(--text-secondary)", fontSize: 13 }}>{new Date(b.createdAt).toLocaleDateString()}</td>
+                    <td style={{ minWidth: '180px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                        <span style={{ fontSize: '12px', fontWeight: 600 }}>Score: {b.fraudScore}</span>
+                        {tierBadge(b.riskTier)}
+                      </div>
+                      <div className="score-bar">
+                        <div className="score-fill" style={{
+                          width: `${b.fraudScore}%`,
+                          background: b.fraudScore > 70 ? "var(--danger)" : b.fraudScore > 30 ? "var(--warning)" : "var(--brand-primary)"
+                        }} />
+                      </div>
+                    </td>
+                    <td>
+                      <span className={`badge ${b.status === "DELIVERED" ? "badge-green" : b.status === "PENDING" ? "badge-yellow" : "badge-blue"}`}>
+                        {b.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
 
@@ -196,13 +282,13 @@ export default function CustomerUI() {
   return (
     <div className="page">
       <div className="page-header">
-        <div className="page-title">Customer</div>
-        <div className="page-sub">Register your gas connection and book cylinders.</div>
+        <h1 className="page-title">Service Dashboard</h1>
+        <p className="page-sub">Secure gas asset management and decentralized identification.</p>
       </div>
 
       <div className="tab-row">
         <button className={`tab ${tab === "register" ? "active" : ""}`} onClick={() => setTab("register")}>Register</button>
-        <button className={`tab ${tab === "book" ? "active" : ""}`} onClick={() => setTab("book")}>Book gas</button>
+        <button className={`tab ${tab === "book" ? "active" : ""}`} onClick={() => setTab("book")}>Book Cylinder</button>
       </div>
 
       {tab === "register" && (
@@ -212,11 +298,18 @@ export default function CustomerUI() {
       {tab === "book" && (
         <>
           {!registered && (
-            <div className="card">
-              <div className="card-title">Enter wallet address</div>
-              <input className="input" placeholder="0x..." value={wallet} onChange={e => setWallet(e.target.value)} />
-              <button className="btn btn-blue" onClick={() => setRegistered({ wallet, name: "" })} disabled={!wallet}>
-                Load account
+            <div className="card" style={{ maxWidth: '600px', margin: '0 auto 40px' }}>
+              <div className="card-title">
+                <Lock size={20} className="sidebar-logo" />
+                Access Controller
+              </div>
+              <div className="form-group">
+                <label className="label">Registered Wallet Address</label>
+                <input className="input" placeholder="0x..." value={wallet} onChange={e => setWallet(e.target.value)} />
+              </div>
+              <button className="btn btn-primary" onClick={() => setRegistered({ wallet, name: "" })} disabled={!wallet} style={{ width: '100%' }}>
+                <CheckCircle size={18} />
+                Authenticate Account
               </button>
             </div>
           )}

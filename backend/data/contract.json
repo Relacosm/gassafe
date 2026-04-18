@@ -1,8 +1,8 @@
 {
-  "contractAddress": "0x20d4F09c0117A282519FaD748162C74D6Ce27FeD",
+  "contractAddress": "0x8f971F26d2B7cAA642d89AdfCBa83D01A9237BFb",
   "ownerAddress": "0xacc1f6E32dB61CB6d48FB752ED28E15EA48A4aD6",
-  "network": "sepolia",
-  "deployedAt": "2026-04-18T12:16:53.191Z",
+  "network": "hela-testnet",
+  "deployedAt": "2026-04-18T20:11:55.495Z",
   "abi": [
     {
       "inputs": [],

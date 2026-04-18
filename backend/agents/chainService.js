@@ -22,7 +22,7 @@ function init() {
   }
 
   const provider = new ethers.JsonRpcProvider(
-    process.env.SEPOLIA_RPC_URL || "https://ethereum-holesky-rpc.publicnode.com"
+    process.env.HELA_RPC_URL || "https://testnet-rpc.helachain.com"
   );
   _wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
   _contract = new ethers.Contract(cfg.contractAddress, cfg.abi, _wallet);

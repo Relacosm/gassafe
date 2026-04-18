@@ -1395,5 +1395,1145 @@
     "overrideable": true,
     "override_history": [],
     "hash": "118687de2407a4dda2c009b593f5d52126a8b808546d0fee5f96ada626ddcb8c"
+  },
+  {
+    "dle_id": "8b55f80d-4b07-4b3b-8556-30f10c6b9643",
+    "trace_id": "3e839cce-745b-46f2-b60f-5502d33af8ec",
+    "agent_id": "booking-agent",
+    "timestamp": "2026-04-18T20:15:06.424Z",
+    "decision_type": "USER_REGISTERED",
+    "inputs": {
+      "walletAddress": "0x1C05AF5fa32b26AfD0431fA65802d75385cAD09a",
+      "addressHash": "936cbdaab19c1b2c..."
+    },
+    "reasoning": {
+      "factors": [
+        {
+          "name": "ZKP Verified",
+          "value": true,
+          "weight": 1,
+          "contribution": 1
+        },
+        {
+          "name": "Duplicate Check",
+          "value": "PASSED",
+          "weight": 1,
+          "contribution": 1
+        },
+        {
+          "name": "LLM Decision",
+          "value": "APPROVE",
+          "weight": 1,
+          "contribution": 1
+        }
+      ],
+      "summary": "New user with unique wallet and address, no red flags detected. SBT issued. Tx: 0xfc5078d195ec26a35e0415bc8a44a1514c81a40a53a27da92a8be32ff2543c2d",
+      "autonomous_action": "APPROVE",
+      "llm_model": "meta-llama/Llama-3.1-8B-Instruct:novita",
+      "llm_confidence": 1
+    },
+    "output": {
+      "sbtIssued": true,
+      "txHash": "0xfc5078d195ec26a35e0415bc8a44a1514c81a40a53a27da92a8be32ff2543c2d",
+      "vouchersGranted": 12,
+      "llm_decision": {
+        "decision": "APPROVE",
+        "reason": "New user with unique wallet and address, no red flags detected.",
+        "confidence": 1,
+        "flags": []
+      }
+    },
+    "confidence": 1,
+    "onchain_tx": "0xfc5078d195ec26a35e0415bc8a44a1514c81a40a53a27da92a8be32ff2543c2d",
+    "overrideable": false,
+    "override_history": [],
+    "hash": "1f82c5bb62053067325575e4a8116a802ed9e3bd4f23faf5d684ac22e138adb9"
+  },
+  {
+    "dle_id": "ee879b9f-d96b-48ec-8b9a-870b1abf9337",
+    "trace_id": "7a5b90e1-fd73-4c7a-b9ea-175a2ee71a9d",
+    "agent_id": "scoring-agent",
+    "timestamp": "2026-04-18T20:15:19.262Z",
+    "decision_type": "FRAUD_SCORE",
+    "inputs": {
+      "bookingId": "BK-1776543316586",
+      "sbtAddress": "0x1C05AF5fa32b26AfD0431fA65802d75385cAD09a",
+      "deviceId": "DEVICE-2SNEYRWD",
+      "ipAddress": "::1",
+      "ipIsVpn": false,
+      "daysSinceLastBooking": 30,
+      "deliveryLat": 18.5204,
+      "deliveryLon": 73.8567,
+      "registeredLat": 18.52,
+      "registeredLon": 73.86,
+      "historicalBookingIntervals": [],
+      "isRural": false,
+      "isKnownSharedDevice": false
+    },
+    "reasoning": {
+      "factors": [
+        {
+          "name": "Sybil Ring Detection",
+          "value": 0,
+          "weight": 0.55,
+          "contribution": 0
+        },
+        {
+          "name": "Hoarder Pattern",
+          "value": 0,
+          "weight": 0.3,
+          "contribution": 0
+        },
+        {
+          "name": "GPS Mismatch",
+          "value": 0,
+          "weight": 0.15,
+          "contribution": 0
+        }
+      ],
+      "summary": "The booking has a low Sybil Ring score due to no recent bookings from the device/subnet, and a low Hoarder Pattern score due to insufficient history. However, the GPS Mismatch signal is present, indicating a potential issue with the delivery address.",
+      "autonomous_action": "ESCALATE",
+      "llm_model": "meta-llama/Llama-3.1-8B-Instruct:novita",
+      "llm_confidence": 0.5
+    },
+    "output": {
+      "fraud_score": 0,
+      "risk_tier": 0,
+      "risk_label": "GREEN",
+      "verification_required": "SMS OTP",
+      "model_breakdown": {
+        "sybil": {
+          "score": 0,
+          "clusterSize": 0,
+          "sameDeviceCount": 0,
+          "sameSubnetCount": 0,
+          "rawSignal": "Only 0 bookings from this device/subnet in last hour"
+        },
+        "hoarder": {
+          "score": 0,
+          "rawSignal": "Insufficient history to evaluate hoarder pattern"
+        },
+        "gps": {
+          "score": 0,
+          "distanceMeters": 351,
+          "rawSignal": "Delivery is 351m from registered address"
+        }
+      },
+      "llm_reasoning": "The booking has a low Sybil Ring score due to no recent bookings from the device/subnet, and a low Hoarder Pattern score due to insufficient history. However, the GPS Mismatch signal is present, indicating a potential issue with the delivery address.",
+      "autonomous_action": "ESCALATE",
+      "action_reason": "Further investigation is required to verify the delivery address.",
+      "primary_signal": "GPS",
+      "false_positive_risk": "LOW",
+      "recommended_human_review": true,
+      "llm_confidence": 0.5,
+      "llm_model": "meta-llama/Llama-3.1-8B-Instruct:novita"
+    },
+    "confidence": 0.5,
+    "onchain_tx": null,
+    "overrideable": true,
+    "override_history": [],
+    "hash": "30273558aba8c2cb12180c05acc5ddec540352738313f11e8eb7dc6cc7d6e0de"
+  },
+  {
+    "dle_id": "ae324ccd-6f19-4dd7-a3b1-b2415ef00bfa",
+    "trace_id": "7a5b90e1-fd73-4c7a-b9ea-175a2ee71a9d",
+    "agent_id": "booking-agent",
+    "timestamp": "2026-04-18T20:15:31.022Z",
+    "decision_type": "BOOKING_CREATED",
+    "inputs": {
+      "bookingId": "BK-1776543316586",
+      "walletAddress": "0x1C05AF5fa32b26AfD0431fA65802d75385cAD09a",
+      "fraudScore": 0
+    },
+    "reasoning": {
+      "factors": [
+        {
+          "name": "Fraud Score",
+          "value": 0,
+          "weight": 1,
+          "contribution": 0
+        },
+        {
+          "name": "Risk Tier",
+          "value": "GREEN",
+          "weight": 1,
+          "contribution": 0
+        },
+        {
+          "name": "Scoring Agent Action",
+          "value": "ESCALATE",
+          "weight": 1,
+          "contribution": 1
+        },
+        {
+          "name": "Booking Agent Final",
+          "value": "HOLD",
+          "weight": 1,
+          "contribution": 1
+        }
+      ],
+      "summary": "The booking has a low Sybil Ring score and a low Hoarder Pattern score, but a GPS Mismatch signal is present, indicating a potential issue with the delivery address. To ensure the integrity of the subsidy, a human review is recommended to verify the booking details.",
+      "autonomous_action": "HOLD",
+      "llm_model": "meta-llama/Llama-3.1-8B-Instruct:novita",
+      "llm_confidence": 0,
+      "override_scoring_agent": false
+    },
+    "output": {
+      "bookingId": "BK-1776543316586",
+      "fraudScore": 0,
+      "riskTier": 0,
+      "escrowTxHash": "0x6840a85610122321417e1072c75dd3ca2e94e2ce8149105d600aacedcbd4f609",
+      "llm_decision": {
+        "final_decision": "HOLD",
+        "decision_reason": "The booking has a low Sybil Ring score and a low Hoarder Pattern score, but a GPS Mismatch signal is present, indicating a potential issue with the delivery address. To ensure the integrity of the subsidy, a human review is recommended to verify the booking details.",
+        "override_scoring_agent": false,
+        "override_reason": null,
+        "confidence": 0,
+        "priority": "NORMAL"
+      }
+    },
+    "confidence": 0,
+    "onchain_tx": "0x6840a85610122321417e1072c75dd3ca2e94e2ce8149105d600aacedcbd4f609",
+    "overrideable": true,
+    "override_history": [],
+    "hash": "7d231b5dfd1bf546ce0f898380cf4c9acb453f3003e5f199b36e903a6ab4eb0e"
+  },
+  {
+    "dle_id": "4651f095-42b9-48f0-a037-42b93c1eeac7",
+    "trace_id": "7a5b90e1-fd73-4c7a-b9ea-175a2ee71a9d",
+    "agent_id": "booking-agent",
+    "timestamp": "2026-04-18T20:16:30.791Z",
+    "decision_type": "DELIVERY_CONFIRMED",
+    "inputs": {
+      "bookingId": "BK-1776543316586",
+      "proofType": "OTP",
+      "agentLat": 18.5204,
+      "agentLon": 73.8567
+    },
+    "reasoning": {
+      "factors": [
+        {
+          "name": "Proof Valid",
+          "value": true,
+          "weight": 1,
+          "contribution": 1
+        },
+        {
+          "name": "Diversion Risk",
+          "value": false,
+          "weight": 1,
+          "contribution": 0
+        },
+        {
+          "name": "LLM Decision",
+          "value": "RELEASE",
+          "weight": 1,
+          "contribution": 1
+        }
+      ],
+      "summary": "The booking ID BK-1776543316586 has a GREEN risk tier, valid OTP proof, and no diversion risk, making it a low-risk delivery. Therefore, we can proceed with releasing the subsidy.",
+      "autonomous_action": "RELEASE",
+      "llm_model": "meta-llama/Llama-3.1-8B-Instruct:novita",
+      "llm_confidence": 1,
+      "diversion_assessment": "CLEAR"
+    },
+    "output": {
+      "delivered": true,
+      "releaseTxHash": "0xc528d897c883e4e2ea1d3b1c4212fb5ff9a11b2076b8fb8484419f1e40b3e848",
+      "diversionRisk": {
+        "flagged": false,
+        "nearbyCount": 0,
+        "message": "Normal"
+      },
+      "llm_decision": {
+        "delivery_decision": "RELEASE",
+        "decision_reason": "The booking ID BK-1776543316586 has a GREEN risk tier, valid OTP proof, and no diversion risk, making it a low-risk delivery. Therefore, we can proceed with releasing the subsidy.",
+        "confidence": 1,
+        "diversion_assessment": "CLEAR"
+      }
+    },
+    "confidence": 1,
+    "onchain_tx": "0xc528d897c883e4e2ea1d3b1c4212fb5ff9a11b2076b8fb8484419f1e40b3e848",
+    "overrideable": false,
+    "override_history": [],
+    "hash": "8535b258d862ac4ca98d00605266724d6ed945fa4d3372b562c8deaa4d4cf87d"
+  },
+  {
+    "dle_id": "64f1eca1-a511-4601-ab17-9f6d85ba2828",
+    "trace_id": "d7910420-943d-4f7c-b309-e0faf95ae8ad",
+    "agent_id": "scoring-agent",
+    "timestamp": "2026-04-18T20:21:42.160Z",
+    "decision_type": "FRAUD_SCORE",
+    "inputs": {
+      "bookingId": "BK-1776543699285",
+      "sbtAddress": "0x1C05AF5fa32b26AfD0431fA65802d75385cAD09a",
+      "deviceId": "DEVICE-64MHGE31",
+      "ipAddress": "::1",
+      "ipIsVpn": false,
+      "daysSinceLastBooking": 30,
+      "deliveryLat": 18.5204,
+      "deliveryLon": 73.8567,
+      "registeredLat": 18.52,
+      "registeredLon": 73.86,
+      "historicalBookingIntervals": [
+        30
+      ],
+      "isRural": false,
+      "isKnownSharedDevice": false
+    },
+    "reasoning": {
+      "factors": [
+        {
+          "name": "Sybil Ring Detection",
+          "value": 0,
+          "weight": 0.55,
+          "contribution": 0
+        },
+        {
+          "name": "Hoarder Pattern",
+          "value": 0,
+          "weight": 0.3,
+          "contribution": 0
+        },
+        {
+          "name": "GPS Mismatch",
+          "value": 0,
+          "weight": 0.15,
+          "contribution": 0
+        }
+      ],
+      "summary": "The booking shows a low Sybil Ring score due to no recent bookings from the device/subnet, and a low Hoarder Pattern score due to insufficient history. However, the GPS Mismatch signal is present, indicating a potential issue with the delivery address. Considering the booking is not from a rural area and is not using a shared device, the risk of false positive is LOW.",
+      "autonomous_action": "ESCALATE",
+      "llm_model": "meta-llama/Llama-3.1-8B-Instruct:novita",
+      "llm_confidence": 0.5
+    },
+    "output": {
+      "fraud_score": 0,
+      "risk_tier": 0,
+      "risk_label": "GREEN",
+      "verification_required": "SMS OTP",
+      "model_breakdown": {
+        "sybil": {
+          "score": 0,
+          "clusterSize": 0,
+          "sameDeviceCount": 0,
+          "sameSubnetCount": 0,
+          "rawSignal": "Only 0 bookings from this device/subnet in last hour"
+        },
+        "hoarder": {
+          "score": 0,
+          "rawSignal": "Insufficient history to evaluate hoarder pattern"
+        },
+        "gps": {
+          "score": 0,
+          "distanceMeters": 351,
+          "rawSignal": "Delivery is 351m from registered address"
+        }
+      },
+      "llm_reasoning": "The booking shows a low Sybil Ring score due to no recent bookings from the device/subnet, and a low Hoarder Pattern score due to insufficient history. However, the GPS Mismatch signal is present, indicating a potential issue with the delivery address. Considering the booking is not from a rural area and is not using a shared device, the risk of false positive is LOW.",
+      "autonomous_action": "ESCALATE",
+      "action_reason": "Further investigation is required to verify the delivery address.",
+      "primary_signal": "GPS",
+      "false_positive_risk": "LOW",
+      "recommended_human_review": true,
+      "llm_confidence": 0.5,
+      "llm_model": "meta-llama/Llama-3.1-8B-Instruct:novita"
+    },
+    "confidence": 0.5,
+    "onchain_tx": null,
+    "overrideable": true,
+    "override_history": [],
+    "hash": "723d83fe9dcb68f84b3493f38adba1cc7f6e5890e5c294c1211209d92412567b"
+  },
+  {
+    "dle_id": "e8e9dd4b-af59-4e33-a6e1-4e43a670e0ff",
+    "trace_id": "d7910420-943d-4f7c-b309-e0faf95ae8ad",
+    "agent_id": "booking-agent",
+    "timestamp": "2026-04-18T20:21:53.799Z",
+    "decision_type": "BOOKING_CREATED",
+    "inputs": {
+      "bookingId": "BK-1776543699285",
+      "walletAddress": "0x1C05AF5fa32b26AfD0431fA65802d75385cAD09a",
+      "fraudScore": 0
+    },
+    "reasoning": {
+      "factors": [
+        {
+          "name": "Fraud Score",
+          "value": 0,
+          "weight": 1,
+          "contribution": 0
+        },
+        {
+          "name": "Risk Tier",
+          "value": "GREEN",
+          "weight": 1,
+          "contribution": 0
+        },
+        {
+          "name": "Scoring Agent Action",
+          "value": "ESCALATE",
+          "weight": 1,
+          "contribution": 1
+        },
+        {
+          "name": "Booking Agent Final",
+          "value": "HOLD",
+          "weight": 1,
+          "contribution": 1
+        }
+      ],
+      "summary": "The booking shows a low risk score, but the GPS Mismatch signal indicates a potential issue with the delivery address, requiring human review for verification.",
+      "autonomous_action": "HOLD",
+      "llm_model": "meta-llama/Llama-3.1-8B-Instruct:novita",
+      "llm_confidence": 0,
+      "override_scoring_agent": false
+    },
+    "output": {
+      "bookingId": "BK-1776543699285",
+      "fraudScore": 0,
+      "riskTier": 0,
+      "escrowTxHash": "0x155213a37692b3cf59cc01336287fa9ccd7ef748d5b23812b65c5ae171ef6717",
+      "llm_decision": {
+        "final_decision": "HOLD",
+        "decision_reason": "The booking shows a low risk score, but the GPS Mismatch signal indicates a potential issue with the delivery address, requiring human review for verification.",
+        "override_scoring_agent": false,
+        "override_reason": null,
+        "confidence": 0,
+        "priority": "HIGH"
+      }
+    },
+    "confidence": 0,
+    "onchain_tx": "0x155213a37692b3cf59cc01336287fa9ccd7ef748d5b23812b65c5ae171ef6717",
+    "overrideable": true,
+    "override_history": [],
+    "hash": "b610321421513fce37e55f1a4d36483e94dbd3db0271c023f19ae12adcc2e0bc"
+  },
+  {
+    "dle_id": "aa6a6fc9-ae66-4dd2-a28d-8f16be64d8ae",
+    "trace_id": "88f9dac3-94c4-46b6-a730-3c37b80b8456",
+    "agent_id": "scoring-agent",
+    "timestamp": "2026-04-18T20:24:34.847Z",
+    "decision_type": "FRAUD_SCORE",
+    "inputs": {
+      "bookingId": "BK-1776543871719",
+      "sbtAddress": "0x1C05AF5fa32b26AfD0431fA65802d75385cAD09a",
+      "deviceId": "DEVICE-5JKYNFQS",
+      "ipAddress": "::1",
+      "ipIsVpn": false,
+      "daysSinceLastBooking": 30,
+      "deliveryLat": 18.5204,
+      "deliveryLon": 73.8567,
+      "registeredLat": 18.52,
+      "registeredLon": 73.86,
+      "historicalBookingIntervals": [
+        30
+      ],
+      "isRural": false,
+      "isKnownSharedDevice": false
+    },
+    "reasoning": {
+      "factors": [
+        {
+          "name": "Sybil Ring Detection",
+          "value": 0,
+          "weight": 0.55,
+          "contribution": 0
+        },
+        {
+          "name": "Hoarder Pattern",
+          "value": 0,
+          "weight": 0.3,
+          "contribution": 0
+        },
+        {
+          "name": "GPS Mismatch",
+          "value": 0,
+          "weight": 0.15,
+          "contribution": 0
+        }
+      ],
+      "summary": "The booking shows a low Sybil Ring score due to no recent bookings from the device/subnet, and a low GPS Mismatch score as the delivery location is close to the registered address. However, the Hoarder Pattern score is unknown due to insufficient history. Considering the rural area and shared device context, the risk of a false positive is LOW.",
+      "autonomous_action": "APPROVE",
+      "llm_model": "meta-llama/Llama-3.1-8B-Instruct:novita",
+      "llm_confidence": 0
+    },
+    "output": {
+      "fraud_score": 0,
+      "risk_tier": 0,
+      "risk_label": "GREEN",
+      "verification_required": "SMS OTP",
+      "model_breakdown": {
+        "sybil": {
+          "score": 0,
+          "clusterSize": 0,
+          "sameDeviceCount": 0,
+          "sameSubnetCount": 0,
+          "rawSignal": "Only 0 bookings from this device/subnet in last hour"
+        },
+        "hoarder": {
+          "score": 0,
+          "rawSignal": "Insufficient history to evaluate hoarder pattern"
+        },
+        "gps": {
+          "score": 0,
+          "distanceMeters": 351,
+          "rawSignal": "Delivery is 351m from registered address"
+        }
+      },
+      "llm_reasoning": "The booking shows a low Sybil Ring score due to no recent bookings from the device/subnet, and a low GPS Mismatch score as the delivery location is close to the registered address. However, the Hoarder Pattern score is unknown due to insufficient history. Considering the rural area and shared device context, the risk of a false positive is LOW.",
+      "autonomous_action": "APPROVE",
+      "action_reason": "Low risk of fraud and sufficient contextual checks.",
+      "primary_signal": "SYBIL",
+      "false_positive_risk": "LOW",
+      "recommended_human_review": false,
+      "llm_confidence": 0,
+      "llm_model": "meta-llama/Llama-3.1-8B-Instruct:novita"
+    },
+    "confidence": 0,
+    "onchain_tx": null,
+    "overrideable": true,
+    "override_history": [],
+    "hash": "4c2c0425b6ef2d1a57a6af0d2ad3ab97213de580106a65d22a243946b32f6d08"
+  },
+  {
+    "dle_id": "f03ee89a-5286-4c88-b962-ac6c39a64ed2",
+    "trace_id": "88f9dac3-94c4-46b6-a730-3c37b80b8456",
+    "agent_id": "booking-agent",
+    "timestamp": "2026-04-18T20:24:48.555Z",
+    "decision_type": "BOOKING_CREATED",
+    "inputs": {
+      "bookingId": "BK-1776543871719",
+      "walletAddress": "0x1C05AF5fa32b26AfD0431fA65802d75385cAD09a",
+      "fraudScore": 0
+    },
+    "reasoning": {
+      "factors": [
+        {
+          "name": "Fraud Score",
+          "value": 0,
+          "weight": 1,
+          "contribution": 0
+        },
+        {
+          "name": "Risk Tier",
+          "value": "GREEN",
+          "weight": 1,
+          "contribution": 0
+        },
+        {
+          "name": "Scoring Agent Action",
+          "value": "APPROVE",
+          "weight": 1,
+          "contribution": 1
+        },
+        {
+          "name": "Booking Agent Final",
+          "value": "PROCEED",
+          "weight": 1,
+          "contribution": 1
+        }
+      ],
+      "summary": "The booking has a low fraud score, green risk label, and low false positive risk, indicating a low risk of a false positive. The scoring agent's approval and primary signal of SYBIL also support proceeding with the booking.",
+      "autonomous_action": "PROCEED",
+      "llm_model": "meta-llama/Llama-3.1-8B-Instruct:novita",
+      "llm_confidence": 0,
+      "override_scoring_agent": false
+    },
+    "output": {
+      "bookingId": "BK-1776543871719",
+      "fraudScore": 0,
+      "riskTier": 0,
+      "escrowTxHash": "0xe105038fdacff65af2720dc4c12841f37210d686c1bc8718c4fe70d8ae758ca8",
+      "llm_decision": {
+        "final_decision": "PROCEED",
+        "decision_reason": "The booking has a low fraud score, green risk label, and low false positive risk, indicating a low risk of a false positive. The scoring agent's approval and primary signal of SYBIL also support proceeding with the booking.",
+        "override_scoring_agent": false,
+        "override_reason": null,
+        "confidence": 0,
+        "priority": "NORMAL"
+      }
+    },
+    "confidence": 0,
+    "onchain_tx": "0xe105038fdacff65af2720dc4c12841f37210d686c1bc8718c4fe70d8ae758ca8",
+    "overrideable": true,
+    "override_history": [],
+    "hash": "93d4a569309b19a0c2f17cf579acfa431a1b461fa4c3352f14503f7f217e9c0e"
+  },
+  {
+    "dle_id": "b9410b15-4d1a-4569-b5ee-d0649c847668",
+    "trace_id": "88f9dac3-94c4-46b6-a730-3c37b80b8456",
+    "agent_id": "booking-agent",
+    "timestamp": "2026-04-18T20:25:18.022Z",
+    "decision_type": "DELIVERY_CONFIRMED",
+    "inputs": {
+      "bookingId": "BK-1776543871719",
+      "proofType": "OTP",
+      "agentLat": 18.5204,
+      "agentLon": 73.8567
+    },
+    "reasoning": {
+      "factors": [
+        {
+          "name": "Proof Valid",
+          "value": true,
+          "weight": 1,
+          "contribution": 1
+        },
+        {
+          "name": "Diversion Risk",
+          "value": false,
+          "weight": 1,
+          "contribution": 0
+        },
+        {
+          "name": "LLM Decision",
+          "value": "RELEASE",
+          "weight": 1,
+          "contribution": 1
+        }
+      ],
+      "summary": "The booking ID BK-1776543871719 has a GREEN risk tier, valid OTP proof, and clear delivery diversion risk, indicating a low-risk transaction. Therefore, releasing the subsidy is justified.",
+      "autonomous_action": "RELEASE",
+      "llm_model": "meta-llama/Llama-3.1-8B-Instruct:novita",
+      "llm_confidence": 0.9,
+      "diversion_assessment": "CLEAR"
+    },
+    "output": {
+      "delivered": true,
+      "releaseTxHash": "0x2a82beedfdc2ebfd1e08e41ead893b27a8cf8b88da96365d8dc8b0e5fdbf9ae3",
+      "diversionRisk": {
+        "flagged": false,
+        "nearbyCount": 1,
+        "message": "Normal"
+      },
+      "llm_decision": {
+        "delivery_decision": "RELEASE",
+        "decision_reason": "The booking ID BK-1776543871719 has a GREEN risk tier, valid OTP proof, and clear delivery diversion risk, indicating a low-risk transaction. Therefore, releasing the subsidy is justified.",
+        "confidence": 0.9,
+        "diversion_assessment": "CLEAR"
+      }
+    },
+    "confidence": 0.9,
+    "onchain_tx": "0x2a82beedfdc2ebfd1e08e41ead893b27a8cf8b88da96365d8dc8b0e5fdbf9ae3",
+    "overrideable": false,
+    "override_history": [],
+    "hash": "f267ffed01f35c088262470e1ee7aed197f0c6b2d54b759344f9f84212de5297"
+  },
+  {
+    "dle_id": "d1b3a337-ce95-4656-ac43-e414ca6b5ddb",
+    "trace_id": "22b00574-a3c7-44f5-8b72-d0b31635558b",
+    "agent_id": "scoring-agent",
+    "timestamp": "2026-04-18T20:39:27.686Z",
+    "decision_type": "FRAUD_SCORE",
+    "inputs": {
+      "bookingId": "BK-1776544764546",
+      "sbtAddress": "0x1C05AF5fa32b26AfD0431fA65802d75385cAD09a",
+      "deviceId": "UID-VOQ3XOJ0",
+      "ipAddress": "::1",
+      "ipIsVpn": false,
+      "daysSinceLastBooking": 30,
+      "deliveryLat": 18.5204,
+      "deliveryLon": 73.8567,
+      "registeredLat": 18.52,
+      "registeredLon": 73.86,
+      "historicalBookingIntervals": [
+        30,
+        0
+      ],
+      "isRural": false,
+      "isKnownSharedDevice": false
+    },
+    "reasoning": {
+      "factors": [
+        {
+          "name": "Sybil Ring Detection",
+          "value": 0,
+          "weight": 0.55,
+          "contribution": 0
+        },
+        {
+          "name": "Hoarder Pattern",
+          "value": 0,
+          "weight": 0.3,
+          "contribution": 0
+        },
+        {
+          "name": "GPS Mismatch",
+          "value": 0,
+          "weight": 0.15,
+          "contribution": 0
+        }
+      ],
+      "summary": "The booking shows a low Sybil Ring score, no hoarder pattern, and a minor GPS mismatch, but is made from a non-rural area with a shared device, which could be a false positive.",
+      "autonomous_action": "APPROVE",
+      "llm_model": "meta-llama/Llama-3.1-8B-Instruct:novita",
+      "llm_confidence": 0
+    },
+    "output": {
+      "fraud_score": 0,
+      "risk_tier": 0,
+      "risk_label": "GREEN",
+      "verification_required": "SMS OTP",
+      "model_breakdown": {
+        "sybil": {
+          "score": 0,
+          "clusterSize": 0,
+          "sameDeviceCount": 0,
+          "sameSubnetCount": 0,
+          "rawSignal": "Only 0 bookings from this device/subnet in last hour"
+        },
+        "hoarder": {
+          "score": 0,
+          "rawSignal": "Insufficient history to evaluate hoarder pattern"
+        },
+        "gps": {
+          "score": 0,
+          "distanceMeters": 351,
+          "rawSignal": "Delivery is 351m from registered address"
+        }
+      },
+      "llm_reasoning": "The booking shows a low Sybil Ring score, no hoarder pattern, and a minor GPS mismatch, but is made from a non-rural area with a shared device, which could be a false positive.",
+      "autonomous_action": "APPROVE",
+      "action_reason": "Low overall risk and no strong fraud signals.",
+      "primary_signal": "CLEAN",
+      "false_positive_risk": "MEDIUM",
+      "recommended_human_review": false,
+      "llm_confidence": 0,
+      "llm_model": "meta-llama/Llama-3.1-8B-Instruct:novita"
+    },
+    "confidence": 0,
+    "onchain_tx": null,
+    "overrideable": true,
+    "override_history": [],
+    "hash": "948d4f43f4e0b86326579b0a865e0d97f7b93c6077dae3693e44c4bf49db0891"
+  },
+  {
+    "dle_id": "3cd494cf-5416-47ae-a839-1ca285518a9a",
+    "trace_id": "22b00574-a3c7-44f5-8b72-d0b31635558b",
+    "agent_id": "booking-agent",
+    "timestamp": "2026-04-18T20:39:35.730Z",
+    "decision_type": "BOOKING_CREATED",
+    "inputs": {
+      "bookingId": "BK-1776544764546",
+      "walletAddress": "0x1C05AF5fa32b26AfD0431fA65802d75385cAD09a",
+      "fraudScore": 0
+    },
+    "reasoning": {
+      "factors": [
+        {
+          "name": "Fraud Score",
+          "value": 0,
+          "weight": 1,
+          "contribution": 0
+        },
+        {
+          "name": "Risk Tier",
+          "value": "GREEN",
+          "weight": 1,
+          "contribution": 0
+        },
+        {
+          "name": "Scoring Agent Action",
+          "value": "APPROVE",
+          "weight": 1,
+          "contribution": 1
+        },
+        {
+          "name": "Booking Agent Final",
+          "value": "PROCEED",
+          "weight": 1,
+          "contribution": 1
+        }
+      ],
+      "summary": "The booking has a low fraud score and a green risk label, with the scoring agent recommending approval. Although there's a minor GPS mismatch, it's considered a potential false positive.",
+      "autonomous_action": "PROCEED",
+      "llm_model": "meta-llama/Llama-3.1-8B-Instruct:novita",
+      "llm_confidence": 0.8,
+      "override_scoring_agent": false
+    },
+    "output": {
+      "bookingId": "BK-1776544764546",
+      "fraudScore": 0,
+      "riskTier": 0,
+      "escrowTxHash": "0xb76d5441efbf3d4ddf1faa7ad9f342043224b5072d6801c24eff140653ea6879",
+      "llm_decision": {
+        "final_decision": "PROCEED",
+        "decision_reason": "The booking has a low fraud score and a green risk label, with the scoring agent recommending approval. Although there's a minor GPS mismatch, it's considered a potential false positive.",
+        "override_scoring_agent": false,
+        "override_reason": null,
+        "confidence": 0.8,
+        "priority": "NORMAL"
+      }
+    },
+    "confidence": 0.8,
+    "onchain_tx": "0xb76d5441efbf3d4ddf1faa7ad9f342043224b5072d6801c24eff140653ea6879",
+    "overrideable": true,
+    "override_history": [],
+    "hash": "f5568bfd71996599fc9c44e996d94fb970f35cef8d31f35144320885a6f8e56f"
+  },
+  {
+    "dle_id": "0fea473f-211c-4f07-b26f-be505a691f10",
+    "trace_id": "82b7912d-06c4-440c-8e78-09624339f786",
+    "agent_id": "scoring-agent",
+    "timestamp": "2026-04-18T20:39:47.559Z",
+    "decision_type": "FRAUD_SCORE",
+    "inputs": {
+      "bookingId": "BK-1776544784335",
+      "sbtAddress": "0x1C05AF5fa32b26AfD0431fA65802d75385cAD09a",
+      "deviceId": "UID-CX9UUT1Z",
+      "ipAddress": "::1",
+      "ipIsVpn": false,
+      "daysSinceLastBooking": 30,
+      "deliveryLat": 18.5204,
+      "deliveryLon": 73.8567,
+      "registeredLat": 18.52,
+      "registeredLon": 73.86,
+      "historicalBookingIntervals": [
+        30,
+        0
+      ],
+      "isRural": false,
+      "isKnownSharedDevice": false
+    },
+    "reasoning": {
+      "factors": [
+        {
+          "name": "Sybil Ring Detection",
+          "value": 0,
+          "weight": 0.55,
+          "contribution": 0
+        },
+        {
+          "name": "Hoarder Pattern",
+          "value": 0,
+          "weight": 0.3,
+          "contribution": 0
+        },
+        {
+          "name": "GPS Mismatch",
+          "value": 0,
+          "weight": 0.15,
+          "contribution": 0
+        }
+      ],
+      "summary": "The booking has a low Sybil Ring score due to only one booking from this device/subnet in the last hour, and the hoarder pattern score is insufficient to evaluate. However, the GPS Mismatch score indicates a possible discrepancy between the delivery location and the registered address.",
+      "autonomous_action": "APPROVE",
+      "llm_model": "meta-llama/Llama-3.1-8B-Instruct:novita",
+      "llm_confidence": 0
+    },
+    "output": {
+      "fraud_score": 0,
+      "risk_tier": 0,
+      "risk_label": "GREEN",
+      "verification_required": "SMS OTP",
+      "model_breakdown": {
+        "sybil": {
+          "score": 0,
+          "clusterSize": 1,
+          "sameDeviceCount": 0,
+          "sameSubnetCount": 1,
+          "rawSignal": "Only 1 bookings from this device/subnet in last hour"
+        },
+        "hoarder": {
+          "score": 0,
+          "rawSignal": "Insufficient history to evaluate hoarder pattern"
+        },
+        "gps": {
+          "score": 0,
+          "distanceMeters": 351,
+          "rawSignal": "Delivery is 351m from registered address"
+        }
+      },
+      "llm_reasoning": "The booking has a low Sybil Ring score due to only one booking from this device/subnet in the last hour, and the hoarder pattern score is insufficient to evaluate. However, the GPS Mismatch score indicates a possible discrepancy between the delivery location and the registered address.",
+      "autonomous_action": "APPROVE",
+      "action_reason": "Low Sybil Ring score and insufficient hoarder pattern data indicate a low risk booking.",
+      "primary_signal": "CLEAN",
+      "false_positive_risk": "LOW",
+      "recommended_human_review": false,
+      "llm_confidence": 0,
+      "llm_model": "meta-llama/Llama-3.1-8B-Instruct:novita"
+    },
+    "confidence": 0,
+    "onchain_tx": null,
+    "overrideable": true,
+    "override_history": [],
+    "hash": "4374c0738149929a23f249b0f37378ab8eef98552c4585aafc57dbf11d94ccc9"
+  },
+  {
+    "dle_id": "46d0497b-8cfa-4624-84a4-ffaeee1712df",
+    "trace_id": "82b7912d-06c4-440c-8e78-09624339f786",
+    "agent_id": "booking-agent",
+    "timestamp": "2026-04-18T20:39:59.560Z",
+    "decision_type": "BOOKING_CREATED",
+    "inputs": {
+      "bookingId": "BK-1776544784335",
+      "walletAddress": "0x1C05AF5fa32b26AfD0431fA65802d75385cAD09a",
+      "fraudScore": 0
+    },
+    "reasoning": {
+      "factors": [
+        {
+          "name": "Fraud Score",
+          "value": 0,
+          "weight": 1,
+          "contribution": 0
+        },
+        {
+          "name": "Risk Tier",
+          "value": "GREEN",
+          "weight": 1,
+          "contribution": 0
+        },
+        {
+          "name": "Scoring Agent Action",
+          "value": "APPROVE",
+          "weight": 1,
+          "contribution": 1
+        },
+        {
+          "name": "Booking Agent Final",
+          "value": "HOLD",
+          "weight": 1,
+          "contribution": 1
+        }
+      ],
+      "summary": "The booking has a low Sybil Ring score, but a possible GPS Mismatch indicates a discrepancy between the delivery location and the registered address, requiring further human review.",
+      "autonomous_action": "HOLD",
+      "llm_model": "meta-llama/Llama-3.1-8B-Instruct:novita",
+      "llm_confidence": 0,
+      "override_scoring_agent": false
+    },
+    "output": {
+      "bookingId": "BK-1776544784335",
+      "fraudScore": 0,
+      "riskTier": 0,
+      "escrowTxHash": "0x313507192cf31c74bd4626204eb97edd08fee6e34374c76e3a2f0b4612b7d65c",
+      "llm_decision": {
+        "final_decision": "HOLD",
+        "decision_reason": "The booking has a low Sybil Ring score, but a possible GPS Mismatch indicates a discrepancy between the delivery location and the registered address, requiring further human review.",
+        "override_scoring_agent": false,
+        "override_reason": null,
+        "confidence": 0,
+        "priority": "NORMAL"
+      }
+    },
+    "confidence": 0,
+    "onchain_tx": "0x313507192cf31c74bd4626204eb97edd08fee6e34374c76e3a2f0b4612b7d65c",
+    "overrideable": true,
+    "override_history": [],
+    "hash": "7b4ae40015d5882a24d9dc35e58bc8f5ed2147da4f6ce884f8f5f8d17748dd82"
+  },
+  {
+    "dle_id": "07cccb89-109b-4f89-a0a6-c4f86922edac",
+    "trace_id": "2b01e12f-624e-47b0-9f4e-cdd749268ae0",
+    "agent_id": "scoring-agent",
+    "timestamp": "2026-04-18T20:41:20.289Z",
+    "decision_type": "FRAUD_SCORE",
+    "inputs": {
+      "bookingId": "BK-1776544876784",
+      "sbtAddress": "0x1C05AF5fa32b26AfD0431fA65802d75385cAD09a",
+      "deviceId": "UID-1VMNKM8E",
+      "ipAddress": "::1",
+      "ipIsVpn": false,
+      "daysSinceLastBooking": 30,
+      "deliveryLat": 18.5204,
+      "deliveryLon": 73.8567,
+      "registeredLat": 18.52,
+      "registeredLon": 73.86,
+      "historicalBookingIntervals": [
+        30,
+        0
+      ],
+      "isRural": false,
+      "isKnownSharedDevice": false
+    },
+    "reasoning": {
+      "factors": [
+        {
+          "name": "Sybil Ring Detection",
+          "value": 0,
+          "weight": 0.55,
+          "contribution": 0
+        },
+        {
+          "name": "Hoarder Pattern",
+          "value": 0,
+          "weight": 0.3,
+          "contribution": 0
+        },
+        {
+          "name": "GPS Mismatch",
+          "value": 0,
+          "weight": 0.15,
+          "contribution": 0
+        }
+      ],
+      "summary": "The booking has a low Sybil Ring score due to the absence of recent bookings from the same device/subnet, and a low Hoarder Pattern score due to insufficient history. However, the GPS Mismatch signal is present, indicating a possible discrepancy in the delivery location. Considering the booking is not from a rural area and is not made from a shared device, the risk of false positive is LOW.",
+      "autonomous_action": "ESCALATE",
+      "llm_model": "meta-llama/Llama-3.1-8B-Instruct:novita",
+      "llm_confidence": 0
+    },
+    "output": {
+      "fraud_score": 0,
+      "risk_tier": 0,
+      "risk_label": "GREEN",
+      "verification_required": "SMS OTP",
+      "model_breakdown": {
+        "sybil": {
+          "score": 0,
+          "clusterSize": 0,
+          "sameDeviceCount": 0,
+          "sameSubnetCount": 0,
+          "rawSignal": "Only 0 bookings from this device/subnet in last hour"
+        },
+        "hoarder": {
+          "score": 0,
+          "rawSignal": "Insufficient history to evaluate hoarder pattern"
+        },
+        "gps": {
+          "score": 0,
+          "distanceMeters": 351,
+          "rawSignal": "Delivery is 351m from registered address"
+        }
+      },
+      "llm_reasoning": "The booking has a low Sybil Ring score due to the absence of recent bookings from the same device/subnet, and a low Hoarder Pattern score due to insufficient history. However, the GPS Mismatch signal is present, indicating a possible discrepancy in the delivery location. Considering the booking is not from a rural area and is not made from a shared device, the risk of false positive is LOW.",
+      "autonomous_action": "ESCALATE",
+      "action_reason": "Further investigation is required to verify the delivery location.",
+      "primary_signal": "GPS",
+      "false_positive_risk": "LOW",
+      "recommended_human_review": true,
+      "llm_confidence": 0,
+      "llm_model": "meta-llama/Llama-3.1-8B-Instruct:novita"
+    },
+    "confidence": 0,
+    "onchain_tx": null,
+    "overrideable": true,
+    "override_history": [],
+    "hash": "aaf478072df27792440a0019f4d5a1ab2e99208391e105ae934af73206741a3a"
+  },
+  {
+    "dle_id": "680aecf3-f5f0-4278-9ab8-72c72b1520d3",
+    "trace_id": "2b01e12f-624e-47b0-9f4e-cdd749268ae0",
+    "agent_id": "booking-agent",
+    "timestamp": "2026-04-18T20:41:34.376Z",
+    "decision_type": "BOOKING_CREATED",
+    "inputs": {
+      "bookingId": "BK-1776544876784",
+      "walletAddress": "0x1C05AF5fa32b26AfD0431fA65802d75385cAD09a",
+      "fraudScore": 0
+    },
+    "reasoning": {
+      "factors": [
+        {
+          "name": "Fraud Score",
+          "value": 0,
+          "weight": 1,
+          "contribution": 0
+        },
+        {
+          "name": "Risk Tier",
+          "value": "GREEN",
+          "weight": 1,
+          "contribution": 0
+        },
+        {
+          "name": "Scoring Agent Action",
+          "value": "ESCALATE",
+          "weight": 1,
+          "contribution": 1
+        },
+        {
+          "name": "Booking Agent Final",
+          "value": "HOLD",
+          "weight": 1,
+          "contribution": 1
+        }
+      ],
+      "summary": "The booking has a low risk score, but the GPS Mismatch signal indicates a possible discrepancy in the delivery location, requiring human review to verify the booking's legitimacy.",
+      "autonomous_action": "HOLD",
+      "llm_model": "meta-llama/Llama-3.1-8B-Instruct:novita",
+      "llm_confidence": 0,
+      "override_scoring_agent": false
+    },
+    "output": {
+      "bookingId": "BK-1776544876784",
+      "fraudScore": 0,
+      "riskTier": 0,
+      "escrowTxHash": "0xb586264b4623108dfaad9e8344ef9fddcfb0c2480ede20b4080b3410bd94be22",
+      "llm_decision": {
+        "final_decision": "HOLD",
+        "decision_reason": "The booking has a low risk score, but the GPS Mismatch signal indicates a possible discrepancy in the delivery location, requiring human review to verify the booking's legitimacy.",
+        "override_scoring_agent": false,
+        "override_reason": null,
+        "confidence": 0,
+        "priority": "NORMAL"
+      }
+    },
+    "confidence": 0,
+    "onchain_tx": "0xb586264b4623108dfaad9e8344ef9fddcfb0c2480ede20b4080b3410bd94be22",
+    "overrideable": true,
+    "override_history": [],
+    "hash": "4a86e31dba5ad2f6c6bf75a9b42227d1f5567f357ac4624290784835e90a608d"
+  },
+  {
+    "dle_id": "1294c1db-8e43-4461-91da-74ccf0d39f44",
+    "trace_id": "2b01e12f-624e-47b0-9f4e-cdd749268ae0",
+    "agent_id": "booking-agent",
+    "timestamp": "2026-04-18T20:43:26.620Z",
+    "decision_type": "DELIVERY_CONFIRMED",
+    "inputs": {
+      "bookingId": "BK-1776544876784",
+      "proofType": "OTP",
+      "agentLat": 18.5204,
+      "agentLon": 73.8567
+    },
+    "reasoning": {
+      "factors": [
+        {
+          "name": "Proof Valid",
+          "value": true,
+          "weight": 1,
+          "contribution": 1
+        },
+        {
+          "name": "Diversion Risk",
+          "value": false,
+          "weight": 1,
+          "contribution": 0
+        },
+        {
+          "name": "LLM Decision",
+          "value": "RELEASE",
+          "weight": 1,
+          "contribution": 1
+        }
+      ],
+      "summary": "The booking ID BK-1776544876784 has a GREEN risk tier, valid OTP proof, and clear delivery diversion risk, indicating a low-risk transaction. Therefore, releasing the subsidy is justified.",
+      "autonomous_action": "RELEASE",
+      "llm_model": "meta-llama/Llama-3.1-8B-Instruct:novita",
+      "llm_confidence": 1,
+      "diversion_assessment": "CLEAR"
+    },
+    "output": {
+      "delivered": true,
+      "releaseTxHash": "0x5c8fb24bce2cf261cb2ca1797034a852a58e44f47e8cf620ab1bf9835c23ffb4",
+      "diversionRisk": {
+        "flagged": false,
+        "nearbyCount": 2,
+        "message": "Normal"
+      },
+      "llm_decision": {
+        "delivery_decision": "RELEASE",
+        "decision_reason": "The booking ID BK-1776544876784 has a GREEN risk tier, valid OTP proof, and clear delivery diversion risk, indicating a low-risk transaction. Therefore, releasing the subsidy is justified.",
+        "confidence": 1,
+        "diversion_assessment": "CLEAR"
+      }
+    },
+    "confidence": 1,
+    "onchain_tx": "0x5c8fb24bce2cf261cb2ca1797034a852a58e44f47e8cf620ab1bf9835c23ffb4",
+    "overrideable": false,
+    "override_history": [],
+    "hash": "29a5bdb299fa54fd710f540118c10630351884a7de0776f2aa4a34343bfe23dc"
   }
 ]

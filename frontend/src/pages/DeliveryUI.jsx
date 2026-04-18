@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { Truck, Fingerprint, CheckCircle, AlertCircle, Calendar, Link, Activity, ShieldCheck, UserCheck } from "lucide-react";
 
 const API = "http://localhost:3001/api";
 
@@ -18,19 +19,18 @@ export default function DeliveryUI() {
   useEffect(() => { load(); const t = setInterval(load, 8000); return () => clearInterval(t); }, []);
 
   function tierInfo(t) {
-    if (t === 0) return { label: "GREEN", color: "var(--green)", bg: "var(--green-bg)", border: "var(--green-border)", proof: "OTP", hint: "Ask customer for SMS OTP" };
-    if (t === 1) return { label: "YELLOW", color: "var(--amber)", bg: "var(--amber-bg)", border: "var(--amber-border)", proof: "PHOTO", hint: "Photo of cylinder in kitchen" };
-    return { label: "RED", color: "var(--red)", bg: "var(--red-bg)", border: "var(--red-border)", proof: "FACE_AUTH", hint: "Live face authentication" };
+    if (t === 0) return { label: "LOW RISK", color: "var(--brand-primary)", bg: "var(--brand-primary-soft)", border: "var(--brand-primary-border)", proof: "OTP Verification", hint: "Standard verification: Request 6-digit OTP from customer." };
+    if (t === 1) return { label: "MEDIUM RISK", color: "var(--warning)", bg: "var(--warning-soft)", border: "var(--warning-border)", proof: "Photo Evidence", hint: "Elevated risk: Upload photo of cylinder installation at premises." };
+    return { label: "HIGH RISK", color: "var(--danger)", bg: "var(--danger-soft)", border: "var(--danger-border)", proof: "Biometric Face Auth", hint: "Critical risk: Live face authentication required via UIDAI portal." };
   }
 
   async function confirm(booking) {
     if (!proofData.trim()) return;
     setLoading(true); setResult(null);
-    const ti = tierInfo(booking.riskTier);
     try {
       const res = await axios.post(`${API}/deliver`, {
         bookingId: booking.bookingId,
-        proofType: ti.proof,
+        proofType: booking.riskTier === 0 ? "OTP" : booking.riskTier === 1 ? "PHOTO" : "FACE_AUTH",
         proofData,
         agentAddress,
         agentLat: 18.5204, agentLon: 73.8567
@@ -46,70 +46,108 @@ export default function DeliveryUI() {
   return (
     <div className="page">
       <div className="page-header">
-        <div className="page-title">Delivery</div>
-        <div className="page-sub">Pending deliveries with risk-tiered verification.</div>
-        <div className="mono" style={{ marginTop: 4 }}>agent: {agentAddress}</div>
+        <h1 className="page-title">Fulfillment Center</h1>
+        <p className="page-sub">Tiered verification workflow for secure gas asset distribution.</p>
+        <div style={{ marginTop: 20 }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 12px', background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '6px' }}>
+            <UserCheck size={14} color="var(--brand-primary)" />
+            <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)' }}>Agent ID: {agentAddress.slice(0, 10)}...</span>
+          </div>
+        </div>
       </div>
 
       {result && (
-        <div className={`alert ${result.success ? "alert-success" : "alert-error"}`}>
-          {result.success
-            ? <>Subsidy released onchain.<br /><span className="mono">tx: {result.releaseTxHash}</span></>
-            : result.error}
+        <div className="card" style={{ background: result.success ? "var(--success-soft)" : "var(--danger-soft)", borderColor: result.success ? "var(--success-border)" : "var(--danger-border)", marginBottom: 32 }}>
+          {result.success ? (
+            <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+              <ShieldCheck size={24} color="var(--success)" />
+              <div>
+                <div style={{ fontWeight: 700, color: 'var(--success)', marginBottom: '4px' }}>Subsidy Release Authorized</div>
+                <div className="mono" style={{ fontSize: '11px', background: 'white' }}>Tx Hash: {result.releaseTxHash}</div>
+              </div>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', gap: '16px', alignItems: 'center', color: 'var(--danger)' }}>
+              <AlertCircle size={24} />
+              <div>{result.error}</div>
+            </div>
+          )}
         </div>
       )}
 
+      <div style={{ marginBottom: 20, display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <Truck size={18} color="var(--text-tertiary)" />
+        <span style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-secondary)' }}>Pending Distributions ({deliveries.length})</span>
+      </div>
+
       {deliveries.length === 0 ? (
-        <div className="card" style={{ textAlign: "center", padding: 48 }}>
-          <div style={{ fontSize: 32, marginBottom: 10, opacity: 0.3 }}>—</div>
-          <div style={{ color: "var(--text2)", fontSize: 13 }}>No pending deliveries</div>
-          <div style={{ color: "var(--text3)", fontSize: 12, marginTop: 4 }}>Refreshing every 8s</div>
+        <div className="card" style={{ textAlign: "center", padding: 80, background: 'var(--bg-secondary)', borderStyle: 'dashed' }}>
+          <div style={{ color: "var(--text-tertiary)", marginBottom: 16 }}>
+            <Truck size={48} strokeWidth={1} />
+          </div>
+          <div style={{ color: "var(--text-secondary)", fontSize: 16, fontWeight: 600 }}>Operational Queue Empty</div>
+          <div style={{ color: "var(--text-tertiary)", fontSize: 13, marginTop: 4 }}>System is monitoring for new bookings on Hela Testnet.</div>
         </div>
       ) : (
-        <div style={{ display: "grid", gap: 10 }}>
+        <div style={{ display: "grid", gap: 16 }}>
           {deliveries.map(b => {
             const ti = tierInfo(b.riskTier);
             const isOpen = selected?.bookingId === b.bookingId;
             return (
-              <div key={b.bookingId} className="card" style={{ borderColor: isOpen ? ti.border : "var(--border)" }}>
-                <div className="row-between" style={{ marginBottom: 10 }}>
+              <div key={b.bookingId} className="card" style={{ borderLeft: `6px solid ${ti.color}`, transition: 'all 0.3s' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
                   <div>
-                    <div style={{ fontWeight: 500, fontSize: 13, marginBottom: 2 }}>{b.bookingId}</div>
-                    <div className="mono">{b.walletAddress}</div>
+                    <div style={{ fontWeight: 700, fontSize: '15px', marginBottom: '4px' }}>Ref: {b.bookingId.slice(0, 16)}...</div>
+                    <div className="mono" style={{ fontSize: '11px' }}>Recipient: {b.walletAddress}</div>
                   </div>
-                  <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                    <div style={{ textAlign: "right" }}>
-                      <div className="mono" style={{ fontSize: 18, fontWeight: 500, color: ti.color }}>{b.fraudScore}</div>
-                      <div style={{ fontSize: 10, color: "var(--text3)", textTransform: "uppercase", letterSpacing: "0.04em" }}>fraud score</div>
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+                      <div style={{ textAlign: 'right' }}>
+                        <div className="mono" style={{ fontSize: 18, fontWeight: 700, color: ti.color }}>{b.fraudScore}</div>
+                        <div style={{ fontSize: 9, color: "var(--text-tertiary)", fontWeight: 700, textTransform: 'uppercase' }}>Fraud Index</div>
+                      </div>
+                      <span className="badge" style={{ background: ti.bg, color: ti.color, border: `1px solid ${ti.border}` }}>{ti.label}</span>
                     </div>
-                    <span className={`badge badge-${b.riskTier === 0 ? "green" : b.riskTier === 1 ? "yellow" : "red"}`}>{ti.label}</span>
                   </div>
                 </div>
 
-                <div style={{ background: ti.bg, border: `1px solid ${ti.border}`, borderRadius: "var(--radius-sm)", padding: "7px 11px", marginBottom: 10 }}>
-                  <div style={{ fontSize: 12, fontWeight: 500, color: ti.color }}>{ti.proof} required</div>
-                  <div style={{ fontSize: 11, color: "var(--text2)" }}>{ti.hint}</div>
+                <div style={{ background: 'var(--bg-secondary)', borderRadius: "var(--radius-md)", padding: "16px", border: '1px solid var(--border-primary)', marginBottom: 24 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                    <Fingerprint size={16} color={ti.color} />
+                    <div style={{ fontSize: 13, fontWeight: 700, color: ti.color, textTransform: 'uppercase' }}>{ti.proof} REQUIRED</div>
+                  </div>
+                  <div style={{ fontSize: 13, color: "var(--text-secondary)" }}>{ti.hint}</div>
                 </div>
 
-                <div className="mono" style={{ marginBottom: 10 }}>
-                  {new Date(b.createdAt).toLocaleString()} · escrow: {b.escrowTxHash?.slice(0, 18)}...
+                <div style={{ display: 'flex', gap: '20px', marginBottom: 24 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-tertiary)', fontSize: '12px' }}>
+                    <Calendar size={14} />
+                    {new Date(b.createdAt).toLocaleString()}
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-tertiary)', fontSize: '12px' }}>
+                    <Link size={14} />
+                    Escrow: {b.escrowTxHash?.slice(0, 12)}...
+                  </div>
                 </div>
 
                 {!isOpen ? (
-                  <button className="btn btn-blue" onClick={() => { setSelected(b); setProofData(""); setResult(null); }}>
-                    Start delivery
+                  <button className="btn btn-primary" onClick={() => { setSelected(b); setProofData(""); setResult(null); }} style={{ width: '100%', padding: '16px' }}>
+                    Initialize Verification Sequence
                   </button>
                 ) : (
-                  <div>
-                    <label className="label">Enter {ti.proof} proof</label>
-                    {b.riskTier === 0 && <input className="input" placeholder="OTP from customer's phone" value={proofData} onChange={e => setProofData(e.target.value)} />}
-                    {b.riskTier === 1 && <input className="input" placeholder="Photo hash / IPFS CID" value={proofData} onChange={e => setProofData(e.target.value)} />}
-                    {b.riskTier === 2 && <input className="input" placeholder="UIDAI face auth txn_id" value={proofData} onChange={e => setProofData(e.target.value)} />}
-                    <div className="row" style={{ marginTop: 6 }}>
-                      <button className="btn btn-green" onClick={() => confirm(b)} disabled={loading || !proofData.trim()}>
-                        {loading ? <><span className="spin">⏳</span> Releasing...</> : "Confirm & release subsidy"}
+                  <div style={{ borderTop: '1px solid var(--border-primary)', paddingTop: 24 }}>
+                    <div className="form-group">
+                      <label className="label">Verification Evidence Payload</label>
+                      {b.riskTier === 0 && <input className="input" placeholder="Input 6-digit OTP provided by recipient" value={proofData} onChange={e => setProofData(e.target.value)} />}
+                      {b.riskTier === 1 && <input className="input" placeholder="IPFS CID of installation photograph" value={proofData} onChange={e => setProofData(e.target.value)} />}
+                      {b.riskTier === 2 && <input className="input" placeholder="UIDAI Biometric Transaction ID" value={proofData} onChange={e => setProofData(e.target.value)} />}
+                    </div>
+                    <div style={{ display: 'flex', gap: 12 }}>
+                      <button className="btn btn-primary" onClick={() => confirm(b)} disabled={loading || !proofData.trim()} style={{ flex: 1 }}>
+                        {loading ? <Activity size={18} className="spin" /> : <ShieldCheck size={18} />}
+                        {loading ? "Confirming Proof..." : "Verify & Release Escrow"}
                       </button>
-                      <button className="btn btn-outline" onClick={() => setSelected(null)}>Cancel</button>
+                      <button className="btn btn-outline" onClick={() => setSelected(null)}>Abort</button>
                     </div>
                   </div>
                 )}

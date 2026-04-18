@@ -1,4 +1,4 @@
-// deploy.js — Deploy GasSafe.sol to Sepolia/Holesky testnet
+// deploy.js — Deploy GasSafe.sol to HeLa testnet
 // Run: node contracts/deploy.js
 
 const { ethers } = require("ethers");
@@ -22,19 +22,18 @@ const ABI      = JSON.parse(fs.readFileSync(ABI_PATH, "utf8"));
 const BYTECODE = "0x" + fs.readFileSync(BIN_PATH, "utf8").trim();
 
 async function deploy() {
-  // Support both HOLESKY_RPC_URL and SEPOLIA_RPC_URL in .env
+  // Use HELA_RPC_URL from .env or fall back to HeLa testnet
   const RPC_URL =
-    process.env.HOLESKY_RPC_URL ||
-    process.env.SEPOLIA_RPC_URL ||
-    "https://ethereum-holesky-rpc.publicnode.com";
+    process.env.HELA_RPC_URL ||
+    "https://testnet-rpc.helachain.com";
 
   const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
   if (!PRIVATE_KEY) {
     console.error("❌ No PRIVATE_KEY found in .env");
     console.log("\n📋 Setup instructions:");
-    console.log("1. Get testnet ETH from https://holesky-faucet.pk910.de/");
-    console.log("2. Add to .env:  PRIVATE_KEY=0x...   HOLESKY_RPC_URL=https://...");
+    console.log("1. Get testnet HLUSD from https://testnet-faucet.helachain.com");
+    console.log("2. Add to .env:  PRIVATE_KEY=0x...   HELA_RPC_URL=https://testnet-rpc.helachain.com");
     process.exit(1);
   }
 
@@ -70,7 +69,7 @@ async function deploy() {
   const config = {
     contractAddress: address,
     ownerAddress:    wallet.address,
-    network:         RPC_URL.includes("holesky") ? "holesky" : "sepolia",
+    network:         RPC_URL.includes("testnet-rpc.helachain") ? "hela-testnet" : "hela-mainnet",
     deployedAt:      new Date().toISOString(),
     abi:             ABI,
   };
@@ -79,9 +78,9 @@ async function deploy() {
   fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
   console.log(`💾 Config saved to ${configPath}`);
 
-  const explorer = RPC_URL.includes("holesky")
-    ? `https://holesky.etherscan.io/address/${address}`
-    : `https://sepolia.etherscan.io/address/${address}`;
+  const explorer = RPC_URL.includes("testnet-rpc.helachain")
+    ? `https://testnet-blockexplorer.helachain.com/address/${address}`
+    : `https://helascan.io/address/${address}`;
 
   console.log("\n🎉 Deployment complete!");
   console.log(`🔗 View on explorer: ${explorer}`);

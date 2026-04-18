@@ -18,6 +18,14 @@ const llmClient = new OpenAI({
 
 const LLM_MODEL = "meta-llama/Llama-3.1-8B-Instruct:novita";
 
+// ── OTP Generator ────────────────────────────────────────────
+function generateOTP() {
+  // Cryptographically secure 6-digit OTP (000000–999999)
+  const otp = (crypto.randomInt(0, 1000000)).toString().padStart(6, "0");
+  const otpHash = crypto.createHash("sha256").update(otp).digest("hex");
+  return { otp, otpHash };
+}
+
 // ── Mock ZKP ──────────────────────────────────────────────────
 function generateMockZKP(aadhaarNumber, addressHash) {
   const salt = crypto.randomBytes(16).toString("hex");
@@ -329,7 +337,11 @@ async function bookGas({ walletAddress, deviceId, ipAddress, ipIsVpn = false, de
     };
   }
 
-  // Step 3: Lock subsidy on-chain
+  // Step 3: Generate OTP for delivery verification
+  const { otp, otpHash } = generateOTP();
+  console.log(`[bookingAgent] OTP generated for booking ${bookingId}: ${otp}`);
+
+  // Step 4: Lock subsidy on-chain
   const txResult = await chain.lockSubsidy(bookingId, walletAddress, scorePayload.risk_tier, scorePayload.fraud_score, traceId);
 
   db.bookings[bookingId] = {
@@ -344,7 +356,8 @@ async function bookGas({ walletAddress, deviceId, ipAddress, ipIsVpn = false, de
     traceId,
     agentScoreDleId: scoreResponse.dle_id,
     llmDecision: llmDecision,
-    autonomousAction: llmDecision.final_decision
+    autonomousAction: llmDecision.final_decision,
+    otpHash   // stored hashed — never expose plain OTP at rest
   };
   db.users[walletAddress].vouchersRemaining--;
   writeDB(db);
@@ -381,6 +394,9 @@ async function bookGas({ walletAddress, deviceId, ipAddress, ipIsVpn = false, de
     verificationRequired: scorePayload.verification_required,
     escrowTxHash: txResult.txHash,
     bookingStatus: db.bookings[bookingId].status,
+    // OTP — share this with the beneficiary; delivery agent must submit it
+    otp,
+    otpNote: "Share this 6-digit OTP with the delivery agent. It is required to confirm delivery.",
     // Full autonomous decision trail
     scoring_agent: {
       action: scorePayload.autonomous_action,
@@ -405,7 +421,7 @@ async function confirmDelivery({ bookingId, proofType, proofData, agentAddress, 
   if (!booking) return { success: false, error: "Booking not found", traceId };
   if (booking.status !== "PENDING") return { success: false, error: `Booking status is ${booking.status}, expected PENDING`, traceId };
 
-  const proofValid = validateProof(booking.riskTier, proofType, proofData);
+  const proofValid = validateProof(booking.riskTier, proofType, proofData, booking);
   const diversionRisk = checkDeliveryDiversion(agentAddress, agentLat, agentLon, db);
 
   // LLM autonomous delivery decision
@@ -502,11 +518,23 @@ async function confirmDelivery({ bookingId, proofType, proofData, agentAddress, 
   };
 }
 
-function validateProof(riskTier, proofType, proofData) {
+function validateProof(riskTier, proofType, proofData, booking) {
   if (riskTier === 0 && proofType !== "OTP") return { valid: false, reason: "GREEN tier requires OTP" };
   if (riskTier === 1 && proofType !== "PHOTO") return { valid: false, reason: "YELLOW tier requires PHOTO" };
   if (riskTier === 2 && proofType !== "FACE_AUTH") return { valid: false, reason: "RED tier requires FACE_AUTH" };
   if (!proofData || proofData.length < 4) return { valid: false, reason: "Invalid proof data" };
+
+  // ── OTP Validation ──────────────────────────────────────────
+  if (proofType === "OTP") {
+    if (!booking || !booking.otpHash) {
+      return { valid: false, reason: "No OTP on record for this booking" };
+    }
+    const submittedHash = crypto.createHash("sha256").update(proofData.trim()).digest("hex");
+    if (submittedHash !== booking.otpHash) {
+      return { valid: false, reason: "Invalid OTP — delivery verification failed" };
+    }
+  }
+
   return { valid: true };
 }
 

@@ -1,22 +1,26 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { Users, Package, Clock, CheckCircle, AlertTriangle, FileText, Anchor, Search, ChevronDown, Activity, ExternalLink, ShieldAlert } from "lucide-react";
 
 const API = "http://localhost:3001/api";
 
 function StatGrid({ stats }) {
   if (!stats) return null;
   const items = [
-    { val: stats.totalUsers, lbl: "Users", color: "var(--green)" },
-    { val: stats.totalBookings, lbl: "Bookings", color: "var(--blue)" },
-    { val: stats.pendingBookings, lbl: "Pending", color: "var(--amber)" },
-    { val: stats.deliveredBookings, lbl: "Delivered", color: "var(--green)" },
-    { val: stats.redBookings, lbl: "Red zone", color: "var(--red)" },
-    { val: stats.totalDLEs, lbl: "Audit entries", color: "var(--purple)" },
+    { val: stats.totalUsers, lbl: "Identified Users", color: "var(--brand-primary)", icon: Users },
+    { val: stats.totalBookings, lbl: "Total Requests", color: "var(--brand-primary)", icon: Package },
+    { val: stats.pendingBookings, lbl: "Awaiting Action", color: "var(--warning)", icon: Clock },
+    { val: stats.deliveredBookings, lbl: "Fulfilled", color: "var(--brand-primary)", icon: CheckCircle },
+    { val: stats.redBookings, lbl: "High Risk Flags", color: "var(--danger)", icon: AlertTriangle },
+    { val: stats.totalDLEs, lbl: "Audit Records", color: "var(--accent)", icon: FileText },
   ];
   return (
-    <div className="stat-grid" style={{ gridTemplateColumns: "repeat(6, 1fr)" }}>
+    <div className="stat-grid">
       {items.map(i => (
         <div className="stat-card" key={i.lbl}>
+          <div style={{ color: i.color, marginBottom: '12px' }}>
+            <i.icon size={24} />
+          </div>
           <div className="stat-val" style={{ color: i.color }}>{i.val ?? 0}</div>
           <div className="stat-lbl">{i.lbl}</div>
         </div>
@@ -31,9 +35,6 @@ function DLERow({ dle, onOverride }) {
   const [overriding, setOverriding] = useState(false);
 
   const isBooking = dle.agent_id === "booking-agent";
-  const agentColor = isBooking ? "var(--blue)" : "var(--purple)";
-  const agentBg = isBooking ? "var(--blue-bg)" : "var(--purple-bg)";
-  const agentBorder = isBooking ? "var(--blue-border)" : "var(--purple-border)";
 
   async function submitOverride() {
     setOverriding(true);
@@ -43,71 +44,89 @@ function DLERow({ dle, onOverride }) {
   }
 
   return (
-    <div style={{ border: "1px solid var(--border)", borderRadius: "var(--radius-sm)", marginBottom: 6, overflow: "hidden" }}>
-      <div
-        style={{ padding: "9px 12px", cursor: "pointer", display: "flex", gap: 10, alignItems: "center", background: open ? "var(--bg3)" : "transparent" }}
-        onClick={() => setOpen(!open)}
-      >
-        <span style={{ background: agentBg, color: agentColor, border: `1px solid ${agentBorder}`, fontSize: 10, fontWeight: 500, padding: "2px 7px", borderRadius: 99, whiteSpace: "nowrap", fontFamily: "DM Mono, monospace" }}>
-          {dle.agent_id}
-        </span>
-        <span style={{ fontWeight: 500, fontSize: 12, flex: 1, color: "var(--text)" }}>{dle.decision_type}</span>
-        {dle.override_history?.length > 0 && <span className="badge badge-yellow">overridden</span>}
-        <span className="mono" style={{ fontSize: 10 }}>{new Date(dle.timestamp).toLocaleTimeString()}</span>
-        <span style={{ color: "var(--text3)", fontSize: 10 }}>{open ? "▲" : "▼"}</span>
+    <div className="panel">
+      <div className="panel-header" onClick={() => setOpen(!open)}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flex: 1 }}>
+          <span className="badge badge-blue" style={{ fontFamily: 'JetBrains Mono', fontSize: '10px', background: 'var(--bg-tertiary)', color: 'var(--text-secondary)' }}>
+            {dle.agent_id}
+          </span>
+          <span style={{ fontWeight: 600, fontSize: '14px' }}>{dle.decision_type}</span>
+          {dle.override_history?.length > 0 && (
+            <span className="badge badge-yellow" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <ShieldAlert size={12} />
+              Manual Override
+            </span>
+          )}
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <span className="mono" style={{ fontSize: '11px' }}>{new Date(dle.timestamp).toLocaleTimeString()}</span>
+          <ChevronDown size={16} style={{ color: "var(--text-tertiary)", transition: 'transform 0.2s', transform: open ? 'rotate(180deg)' : 'none' }} />
+        </div>
       </div>
 
       {open && (
-        <div style={{ padding: 14, background: "var(--bg)", borderTop: "1px solid var(--border)" }}>
-          <div style={{ background: "var(--bg3)", border: "1px solid var(--border)", borderRadius: "var(--radius-sm)", padding: 10, marginBottom: 10, fontSize: 12, lineHeight: 1.7, color: "var(--text2)" }}>
-            {dle.reasoning?.summary}
+        <div className="panel-content">
+          <div style={{ background: "white", border: "1px solid var(--border-primary)", borderRadius: "var(--radius-sm)", padding: "20px", marginBottom: "24px" }}>
+            <div style={{ fontWeight: 700, fontSize: '11px', color: 'var(--text-tertiary)', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Analysis Conclusion</div>
+            <div style={{ fontSize: '15px', lineHeight: 1.6, color: "var(--text-primary)" }}>
+              {dle.reasoning?.summary}
+            </div>
           </div>
 
           {dle.reasoning?.factors?.length > 0 && (
-            <div style={{ marginBottom: 10 }}>
+            <div style={{ marginBottom: 24 }}>
+              <div style={{ fontWeight: 700, fontSize: '11px', color: 'var(--text-tertiary)', marginBottom: '16px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Weighted Risk Factors</div>
               {dle.reasoning.factors.map(f => (
-                <div key={f.name} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5 }}>
-                  <span style={{ fontSize: 11, minWidth: 160, color: "var(--text2)" }}>{f.name}</span>
-                  <div style={{ flex: 1, background: "var(--bg3)", borderRadius: 2, height: 3 }}>
-                    <div style={{ width: `${Math.min(f.contribution, 100)}%`, height: "100%", background: f.contribution > 30 ? "var(--red)" : "var(--green)", borderRadius: 2 }} />
+                <div key={f.name} style={{ marginBottom: 12 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+                    <span style={{ fontSize: 13, fontWeight: 500 }}>{f.name}</span>
+                    <span className="mono" style={{ fontSize: 11 }}>{f.contribution}% impact</span>
                   </div>
-                  <span className="mono" style={{ minWidth: 24 }}>{f.contribution}</span>
+                  <div className="score-bar" style={{ background: 'var(--bg-tertiary)' }}>
+                    <div className="score-fill" style={{ width: `${Math.min(f.contribution, 100)}%`, background: f.contribution > 30 ? "var(--danger)" : "var(--brand-primary)" }} />
+                  </div>
                 </div>
               ))}
             </div>
           )}
 
-          <details style={{ marginBottom: 10 }}>
-            <summary style={{ cursor: "pointer", fontSize: 11, color: "var(--text2)", marginBottom: 5 }}>output json</summary>
-            <pre style={{ background: "var(--bg3)", border: "1px solid var(--border)", borderRadius: "var(--radius-sm)", padding: 10, fontSize: 11, color: "var(--text2)", overflow: "auto", maxHeight: 180, fontFamily: "DM Mono, monospace" }}>
+          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: 24 }}>
+            <div className="mono" style={{ fontSize: 10 }}>DLE UID: {dle.dle_id?.slice(0, 16)}...</div>
+            <div className="mono" style={{ fontSize: 10 }}>Session: {dle.trace_id?.slice(0, 16)}...</div>
+            {dle.onchain_tx && (
+              <a href="#" className="mono" style={{ fontSize: 10, color: "var(--brand-primary)", textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                Onchain Proof <ExternalLink size={10} />
+              </a>
+            )}
+            <span className="badge badge-blue" style={{ fontSize: 10, borderRadius: '4px' }}>Confidence Index: {(dle.confidence * 100).toFixed(0)}%</span>
+          </div>
+
+          <details style={{ marginBottom: 24 }}>
+            <summary style={{ cursor: "pointer", fontSize: 12, color: "var(--brand-primary)", fontWeight: 600 }}>Inspection Data Payload</summary>
+            <pre className="mono" style={{ marginTop: 12, padding: 16, maxHeight: 250, overflow: 'auto', background: 'white', border: '1px solid var(--border-primary)', fontSize: '11px' }}>
               {JSON.stringify(dle.output, null, 2)}
             </pre>
           </details>
 
-          <div className="row" style={{ marginBottom: 10, flexWrap: "wrap", gap: 8 }}>
-            <span className="mono" style={{ fontSize: 10 }}>dle: {dle.dle_id?.slice(0, 16)}...</span>
-            <span className="mono" style={{ fontSize: 10 }}>trace: {dle.trace_id?.slice(0, 16)}...</span>
-            {dle.onchain_tx && <span className="mono" style={{ fontSize: 10, color: "var(--blue)" }}>tx: {dle.onchain_tx?.slice(0, 18)}...</span>}
-            <span className="mono" style={{ fontSize: 10 }}>confidence: {(dle.confidence * 100).toFixed(0)}%</span>
-          </div>
-
           {dle.override_history?.length > 0 && (
-            <div style={{ background: "var(--amber-bg)", border: "1px solid var(--amber-border)", borderRadius: "var(--radius-sm)", padding: 10, marginBottom: 10 }}>
+            <div style={{ background: "var(--warning-soft)", border: "1px solid var(--warning-border)", borderRadius: "var(--radius-sm)", padding: 16, marginBottom: 24 }}>
+              <div style={{ fontWeight: 700, fontSize: '11px', color: "var(--warning)", marginBottom: '8px', textTransform: 'uppercase' }}>Audit Override History</div>
               {dle.override_history.map(o => (
-                <div key={o.override_id} style={{ fontSize: 12, color: "var(--amber)" }}>
-                  {o.challenged_by} — "{o.reason}" — {new Date(o.timestamp).toLocaleString()}
+                <div key={o.override_id} style={{ fontSize: 13, marginBottom: '4px' }}>
+                  <strong>{o.challenged_by}</strong>: "{o.reason}" <span style={{ opacity: 0.5, fontSize: '11px' }}>— {new Date(o.timestamp).toLocaleString()}</span>
                 </div>
               ))}
             </div>
           )}
 
           {dle.overrideable && (
-            <div style={{ borderTop: "1px solid var(--border)", paddingTop: 10 }}>
-              <label className="label">Admin override</label>
-              <div className="row">
-                <input className="input" style={{ marginBottom: 0, flex: 1 }} placeholder="Reason for override..." value={overrideReason} onChange={e => setOverrideReason(e.target.value)} />
-                <button className="btn btn-red" onClick={submitOverride} disabled={overriding || !overrideReason.trim()}>
-                  {overriding ? "..." : "Override"}
+            <div style={{ borderTop: "1px solid var(--border-primary)", paddingTop: 24 }}>
+              <label className="label">Authorized Override Control</label>
+              <div style={{ display: 'flex', gap: '16px' }}>
+                <input className="input" style={{ flex: 1 }} placeholder="Enter formal justification for record override..." value={overrideReason} onChange={e => setOverrideReason(e.target.value)} />
+                <button className="btn btn-outline" style={{ color: 'var(--danger)', borderColor: 'var(--danger)' }} onClick={submitOverride} disabled={overriding || !overrideReason.trim()}>
+                  {overriding ? <Activity size={16} className="spin" /> : <ShieldAlert size={16} />}
+                  Execute Override
                 </button>
               </div>
             </div>
@@ -164,53 +183,64 @@ export default function AdminUI() {
   return (
     <div className="page">
       <div className="page-header">
-        <div className="page-title">Admin audit</div>
-        <div className="page-sub">Full decision transparency — AAEP protocol.</div>
+        <h1 className="page-title">Compliance Dashboard</h1>
+        <p className="page-sub">Cryptographic verification of AAEP protocol decisions and state consistency.</p>
       </div>
 
       <StatGrid stats={stats} />
 
-      <div className="card" style={{ marginBottom: 16 }}>
-        <div className="row-between">
-          <div>
-            <label className="label">Merkle root</label>
-            <div className="mono">{audit.merkleRoot || "No entries yet"}</div>
+      <div className="card" style={{ borderTop: '4px solid var(--brand-primary)', background: 'var(--bg-secondary)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '32px' }}>
+          <div style={{ flex: 1 }}>
+            <label className="label">Protocol State Root (Merkle)</label>
+            <div className="mono" style={{ fontSize: '14px', padding: '12px', background: 'white', border: '1px solid var(--border-primary)' }}>{audit.merkleRoot || "Syncing state root..."}</div>
             {stats?.contractConfig && (
-              <div className="mono" style={{ marginTop: 4, color: "var(--blue)", fontSize: 10 }}>
-                contract: {stats.contractConfig.contractAddress}
+              <div style={{ marginTop: 12 }}>
+                <span className="badge badge-blue" style={{ fontSize: '10px', background: 'white' }}>Oracle: {stats.contractConfig.contractAddress}</span>
               </div>
             )}
           </div>
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 6 }}>
-            <button className="btn btn-purple" onClick={anchorRoot} disabled={anchoring}>
-              {anchoring ? <><span className="spin">⏳</span> Anchoring...</> : "Anchor root onchain"}
+          <div style={{ textAlign: 'right' }}>
+            <button className="btn btn-primary" onClick={anchorRoot} disabled={anchoring}>
+              {anchoring ? <Activity size={18} className="spin" /> : <Anchor size={18} />}
+              Anchor State Onchain
             </button>
             {anchorResult && (
-              <div className="mono" style={{ fontSize: 10, color: "var(--green)" }}>
-                anchored: {anchorResult.txHash?.slice(0, 22)}...
+              <div className="mono" style={{ marginTop: 12, fontSize: 10, color: "var(--brand-primary)" }}>
+                Proof Tx: {anchorResult.txHash?.slice(0, 32)}...
               </div>
             )}
           </div>
         </div>
       </div>
 
-      <div className="tab-row">
-        <button className={`tab ${tab === "overview" ? "active" : ""}`} onClick={() => setTab("overview")}>All decisions</button>
-        <button className={`tab ${tab === "trace" ? "active" : ""}`} onClick={() => setTab("trace")}>Trace search</button>
+      <div className="tab-row" style={{ marginTop: '48px' }}>
+        <button className={`tab ${tab === "overview" ? "active" : ""}`} onClick={() => setTab("overview")}>Decision Logs</button>
+        <button className={`tab ${tab === "trace" ? "active" : ""}`} onClick={() => setTab("trace")}>Session Trace</button>
       </div>
 
       {tab === "overview" && (
         <div className="card">
-          <div className="row-between" style={{ marginBottom: 12 }}>
-            <div className="card-title" style={{ marginBottom: 0 }}>Decision log ({filteredEntries.length})</div>
-            <div className="row" style={{ gap: 4 }}>
-              {["ALL", "booking-agent", "scoring-agent", "FRAUD_SCORE", "BOOKING_CREATED"].map(f => (
-                <button key={f} className={`tab ${filter === f ? "active" : ""}`} style={{ padding: "3px 8px", fontSize: 10 }} onClick={() => setFilter(f)}>{f}</button>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
+            <div className="card-title" style={{ marginBottom: 0 }}>
+              <FileText size={20} className="sidebar-logo" />
+              Audit Trail ({filteredEntries.length})
+            </div>
+            <div className="tab-row" style={{ margin: 0, border: 'none', gap: '8px' }}>
+              {["ALL", "booking-agent", "scoring-agent"].map(f => (
+                <button 
+                  key={f} 
+                  className={`tab ${filter === f ? "active" : ""}`} 
+                  style={{ padding: "8px 12px", fontSize: '13px' }} 
+                  onClick={() => setFilter(f)}
+                >
+                  {f === "ALL" ? "All Activity" : f.split('-')[0]}
+                </button>
               ))}
             </div>
           </div>
           {filteredEntries.length === 0
-            ? <div style={{ textAlign: "center", color: "var(--text3)", padding: 40, fontSize: 13 }}>No audit entries yet.</div>
+            ? <div style={{ textAlign: "center", color: "var(--text-tertiary)", padding: 80, fontSize: 16 }}>Initializing decision monitoring...</div>
             : filteredEntries.map(d => <DLERow key={d.dle_id} dle={d} onOverride={override} />)
           }
         </div>
@@ -218,14 +248,23 @@ export default function AdminUI() {
 
       {tab === "trace" && (
         <div className="card">
-          <div className="card-title">Trace ID lookup</div>
-          <div className="row">
-            <input className="input" style={{ marginBottom: 0, flex: 1 }} placeholder="Paste trace_id..." value={traceSearch} onChange={e => setTraceSearch(e.target.value)} />
-            <button className="btn btn-purple" onClick={searchTrace}>Search</button>
+          <div className="card-title">
+            <Search size={20} className="sidebar-logo" />
+            Forensic Investigation
+          </div>
+          <div style={{ display: 'flex', gap: '16px', marginBottom: 32 }}>
+            <input className="input" style={{ flex: 1 }} placeholder="Enter Session / Trace ID for granular analysis..." value={traceSearch} onChange={e => setTraceSearch(e.target.value)} />
+            <button className="btn btn-primary" onClick={searchTrace}>
+              <Activity size={18} />
+              Execute Query
+            </button>
           </div>
           {traceResult && (
-            <div style={{ marginTop: 14 }}>
-              <div className="alert alert-info" style={{ marginBottom: 10 }}>Found {traceResult.total} decision(s)</div>
+            <div>
+              <div style={{ background: 'var(--success-soft)', padding: '16px', borderRadius: '8px', color: 'var(--brand-primary)', marginBottom: 24, display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <CheckCircle size={18} />
+                Found {traceResult.total} related decision events.
+              </div>
               {traceResult.entries.map(d => <DLERow key={d.dle_id} dle={d} onOverride={override} />)}
             </div>
           )}
