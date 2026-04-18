@@ -1,0 +1,10 @@
+{
+  "address": "0x48A432850150078D800e6E626A7CCD7fD32D7946",
+  "network": "holesky",
+  "generatedAt": "2026-04-18T11:37:11.434Z",
+  "faucets": [
+    "https://holesky-faucet.pk910.de/",
+    "https://faucet.quicknode.com/ethereum/holesky",
+    "https://www.alchemy.com/faucets/ethereum-holesky"
+  ]
+}

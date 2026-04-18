@@ -1,0 +1,25 @@
+{
+  "name": "gassafe",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "build": "cd frontend && npm run build",
+    "wallet": "node contracts/generateWallet.js",
+    "deploy": "node contracts/deploy.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "ethers": "^6.16.0",
+    "express": "^5.2.1",
+    "ml-matrix": "^6.12.2",
+    "openai": "^6.34.0",
+    "uuid": "^13.0.0"
+  }
+}
