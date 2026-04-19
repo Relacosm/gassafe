@@ -2473,7 +2473,14 @@
     "confidence": 0,
     "onchain_tx": "0xb586264b4623108dfaad9e8344ef9fddcfb0c2480ede20b4080b3410bd94be22",
     "overrideable": true,
-    "override_history": [],
+    "override_history": [
+      {
+        "override_id": "37d1cf75-c0ef-4ce0-9347-9670c234d35b",
+        "challenged_by": "admin",
+        "reason": "hello",
+        "timestamp": "2026-04-19T00:18:45.237Z"
+      }
+    ],
     "hash": "4a86e31dba5ad2f6c6bf75a9b42227d1f5567f357ac4624290784835e90a608d"
   },
   {

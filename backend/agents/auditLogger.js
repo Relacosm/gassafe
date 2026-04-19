@@ -80,6 +80,7 @@ function overrideDLE(dleId, challengedBy, reason, newOutput) {
     override_id: uuidv4(),
     challenged_by: challengedBy,
     reason,
+    original_output: { ...log[idx].output },  // ← SNAPSHOT before overwrite
     new_output: newOutput,
     timestamp: new Date().toISOString()
   };
