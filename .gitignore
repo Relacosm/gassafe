@@ -13,6 +13,9 @@ dist-ssr/
 build/
 out/
 
+
+
+
 # ========================
 # Environment Variables
 # ========================
@@ -82,3 +85,9 @@ desktop.ini
 .cache/
 .temp/
 tmp/
+
+# ========================
+# Internal Planning Docs
+# ========================
+create_chatbot.md
+migrate.md

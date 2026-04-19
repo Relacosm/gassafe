@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Users, Package, Clock, CheckCircle, AlertTriangle, FileText, Anchor, Search, ChevronDown, Activity, ExternalLink, ShieldAlert } from "lucide-react";
+import AdminChatbot from "../components/AdminChatbot";
 
 const API = "http://localhost:3001/api";
 
@@ -404,6 +405,9 @@ export default function AdminUI() {
           )}
         </div>
       )}
+
+      {/* AI Chatbot — floats above page, no layout impact */}
+      <AdminChatbot />
     </div>
   );
 }

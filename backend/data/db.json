@@ -50,10 +50,32 @@
       "phone": "+916202744704",
       "addressHash": "936cbdaab19c1b2c5e0a27b6cbd372b95514d3cafaa066a62c74cb70b2ebdba4",
       "zkpCommitment": "f3306a97bc9ad06fac4be30660274b54a91cbed61a20632d895b5d8dc7e8db9b",
-      "vouchersRemaining": 6,
+      "vouchersRemaining": 3,
       "riskTier": 0,
       "registeredAt": "2026-04-18T20:15:06.422Z",
       "sbtTxHash": "0xfc5078d195ec26a35e0415bc8a44a1514c81a40a53a27da92a8be32ff2543c2d"
+    },
+    "0x1380a7cBAee47916F1E8cF8d5498967782eE9c00": {
+      "walletAddress": "0x1380a7cBAee47916F1E8cF8d5498967782eE9c00",
+      "name": "Rajesh Sharma",
+      "phone": "+916202744704",
+      "addressHash": "326fe3232879c9ce6f368c7502831fed96e2254670802e1daa847bc08fdfbf14",
+      "zkpCommitment": "f670965b9a0e860526298837d7f22647714ed67b3f27ff8313bda069e2fddf77",
+      "vouchersRemaining": 11,
+      "riskTier": 0,
+      "registeredAt": "2026-04-19T04:30:29.634Z",
+      "sbtTxHash": "0xc1278cb1e992d6ff62363ecad9f18607f4c24aaedd6daaeb083ae60f3197a7c7"
+    },
+    "0x44d37cA930B2d7Bd06BA820F2DfAD9a317324B9b": {
+      "walletAddress": "0x44d37cA930B2d7Bd06BA820F2DfAD9a317324B9b",
+      "name": "Suresh Sharma",
+      "phone": "9999999999",
+      "addressHash": "debace0ef8714532aedf46640cc9bcbe872a1996adf5af8fb48233145cb539de",
+      "zkpCommitment": "b3000f36516dd702bf5a669e9e8a6dd3fbe66a86c1dc693ff480e6d61450d7e9",
+      "vouchersRemaining": 11,
+      "riskTier": 0,
+      "registeredAt": "2026-04-19T04:35:08.768Z",
+      "sbtTxHash": "0x5a5a0ce1888a8628e38024eef35f1204e7fdfa7e357b7b00825c8078efa3cb95"
     }
   },
   "bookings": {
@@ -409,6 +431,150 @@
         "confidence": 1,
         "diversion_assessment": "CLEAR"
       }
+    },
+    "BK-1776564171897": {
+      "bookingId": "BK-1776564171897",
+      "walletAddress": "0x1C05AF5fa32b26AfD0431fA65802d75385cAD09a",
+      "deviceId": "UID-9HQ272UP",
+      "fraudScore": 0,
+      "riskTier": 0,
+      "riskLabel": "GREEN",
+      "verificationRequired": "SMS OTP",
+      "status": "PENDING",
+      "createdAt": "2026-04-19T02:03:01.673Z",
+      "escrowTxHash": "0x9f9aaab28a85046e0ba6af8c12f486ca70a2a25ec9891c4a9a667b15688c9457",
+      "traceId": "c49e462d-07e4-4382-ace3-98e8a698d038",
+      "agentScoreDleId": "fa61c480-0a0c-4b12-b0a2-8e1972da4edd",
+      "llmDecision": {
+        "final_decision": "PROCEED",
+        "decision_reason": "The booking has a low Sybil Ring score and GPS Mismatch score, indicating a possible legitimate booking, and the scoring agent has already recommended approval.",
+        "override_scoring_agent": false,
+        "override_reason": null,
+        "confidence": 1,
+        "priority": "NORMAL"
+      },
+      "autonomousAction": "PROCEED",
+      "otpHash": "d856b12f1f081b4d7038b435e6ee06435f06020ced96b4495d09c2f6f492607a"
+    },
+    "BK-1776565303978": {
+      "bookingId": "BK-1776565303978",
+      "walletAddress": "0x1C05AF5fa32b26AfD0431fA65802d75385cAD09a",
+      "deviceId": "UID-WWC0G6WZ",
+      "fraudScore": 0,
+      "riskTier": 0,
+      "riskLabel": "GREEN",
+      "verificationRequired": "SMS OTP",
+      "status": "ON_HOLD",
+      "createdAt": "2026-04-19T02:22:01.823Z",
+      "escrowTxHash": "0xbd290fc6b774346ce086998317887ddb575ee3440111d692af0c46e2f8a23c22",
+      "traceId": "dd341c30-c7c5-4146-acdd-f5c09e1ae65d",
+      "agentScoreDleId": "a90b0702-f7db-4435-9b7a-25c4a4e4725c",
+      "llmDecision": {
+        "final_decision": "HOLD",
+        "decision_reason": "The booking has a low fraud score and a green risk label, but the GPS Mismatch signal indicates a potential issue with the delivery address, requiring human review to verify the booking's legitimacy.",
+        "override_scoring_agent": false,
+        "override_reason": null,
+        "confidence": 0,
+        "priority": "NORMAL"
+      },
+      "autonomousAction": "HOLD",
+      "otpHash": "06821456b921db9d0cd509b2ebef379cd317d7f148f29c3be76af4a44b111533"
+    },
+    "BK-1776566097341": {
+      "bookingId": "BK-1776566097341",
+      "walletAddress": "0x1C05AF5fa32b26AfD0431fA65802d75385cAD09a",
+      "deviceId": "UID-B4LA8NC5",
+      "fraudScore": 0,
+      "riskTier": 0,
+      "riskLabel": "GREEN",
+      "verificationRequired": "SMS OTP",
+      "status": "DELIVERED",
+      "createdAt": "2026-04-19T02:35:07.526Z",
+      "escrowTxHash": "0x784a78a4ffcacf2a1ef7952e94f03a09437a07777c172f90e5f4b46a6b1292b1",
+      "traceId": "c16b5e05-f6ef-41ff-99d1-be8d2b80fece",
+      "agentScoreDleId": "3befa662-ec3b-45e5-893e-fbccd487716a",
+      "llmDecision": {
+        "final_decision": "PROCEED",
+        "decision_reason": "The booking is deemed legitimate with a low fraud score and green risk label, and the scoring agent has already recommended approval.",
+        "override_scoring_agent": false,
+        "override_reason": null,
+        "confidence": 1,
+        "priority": "NORMAL"
+      },
+      "autonomousAction": "PROCEED",
+      "otpHash": "0cfacd9171ea20cb4625b33c8ce0c43cf14f38e491259b4b71308c09a5bae49c",
+      "proofType": "OTP",
+      "proofData": "555117",
+      "deliveredAt": "2026-04-19T02:35:33.097Z",
+      "releaseTxHash": "0xac7abac4e20829fb5cc6fa525d5cfe58f11287438a5466f8ab2151482620bc35",
+      "agentLat": 18.5204,
+      "agentLon": 73.8567,
+      "llmDeliveryDecision": {
+        "delivery_decision": "RELEASE",
+        "decision_reason": "The booking ID BK-1776566097341 has a GREEN risk tier, valid OTP proof, and no diversion risks, making it a low-risk delivery. Therefore, releasing the subsidy is the most appropriate decision.",
+        "confidence": 1,
+        "diversion_assessment": "CLEAR"
+      }
+    },
+    "BK-1776573033499": {
+      "bookingId": "BK-1776573033499",
+      "walletAddress": "0x1380a7cBAee47916F1E8cF8d5498967782eE9c00",
+      "deviceId": "UID-LJSK5MOO",
+      "fraudScore": 0,
+      "riskTier": 0,
+      "riskLabel": "GREEN",
+      "verificationRequired": "SMS OTP",
+      "status": "ON_HOLD",
+      "createdAt": "2026-04-19T04:30:48.007Z",
+      "escrowTxHash": "0x68a871479f11032abd158c12e164ca107a5a584283f2850bec7fe69ea4cf35a1",
+      "traceId": "172e2ca7-0248-4eb6-8d7d-c25117bdb9b5",
+      "agentScoreDleId": "d07c9bff-3774-40c7-b9fb-07aba5d17aaf",
+      "llmDecision": {
+        "final_decision": "HOLD",
+        "decision_reason": "The booking shows a low Sybil Ring score and no hoarder pattern, but a GPS mismatch indicates a possible false positive in the rural area context, requiring human review for further assessment.",
+        "override_scoring_agent": false,
+        "override_reason": null,
+        "confidence": 0,
+        "priority": "NORMAL"
+      },
+      "autonomousAction": "HOLD",
+      "otpHash": "5b17168aa6fef9868e64d79630c76eea5de2eb9fbc27ee4870b88a1799be599e"
+    },
+    "BK-1776573311386": {
+      "bookingId": "BK-1776573311386",
+      "walletAddress": "0x44d37cA930B2d7Bd06BA820F2DfAD9a317324B9b",
+      "deviceId": "UID-7JO3PHG8",
+      "fraudScore": 0,
+      "riskTier": 0,
+      "riskLabel": "GREEN",
+      "verificationRequired": "SMS OTP",
+      "status": "DELIVERED",
+      "createdAt": "2026-04-19T04:35:22.394Z",
+      "escrowTxHash": "0x42ea732530a67061bbb0de335a0382ec4fbb731284463bd11736a6a3aa7285ee",
+      "traceId": "a176dc2a-a856-401d-94c2-6c36fe38b2fc",
+      "agentScoreDleId": "842d8e0d-7aa4-4212-85da-2a77ab37fcc2",
+      "llmDecision": {
+        "final_decision": "HOLD",
+        "decision_reason": "The booking has a high GPS Mismatch score, indicating a potential issue with the user's location, but the overall Fraud Score is low and the Risk Label is GREEN. To ensure the booking is legitimate, we will flag it for human review.",
+        "override_scoring_agent": false,
+        "override_reason": null,
+        "confidence": 0,
+        "priority": "HIGH"
+      },
+      "autonomousAction": "HOLD",
+      "otpHash": "9c6317e2ce8a07248ab6dedb054965cc38787e9a5c0549071959c5bafbfbb109",
+      "proofType": "OTP",
+      "proofData": "570329",
+      "deliveredAt": "2026-04-19T04:36:38.627Z",
+      "releaseTxHash": "0xe8c0d8a4f834c351b9423f5816def2f0f61539c9047c1ccaa2941b46745b7905",
+      "agentLat": 18.5204,
+      "agentLon": 73.8567,
+      "llmDeliveryDecision": {
+        "delivery_decision": "RELEASE",
+        "decision_reason": "The booking ID BK-1776573311386 has a GREEN risk tier, valid OTP proof, and no diversion risk, making it a low-risk delivery. Therefore, we can proceed with releasing the subsidy.",
+        "confidence": 1,
+        "diversion_assessment": "CLEAR"
+      }
     }
   },
   "deliveries": {
@@ -437,6 +603,26 @@
       "walletAddress": "0x1C05AF5fa32b26AfD0431fA65802d75385cAD09a",
       "releaseTxHash": "0x5c8fb24bce2cf261cb2ca1797034a852a58e44f47e8cf620ab1bf9835c23ffb4",
       "deliveredAt": "2026-04-18T20:43:26.619Z",
+      "proofType": "OTP",
+      "agentAddress": "0xacc1f6E32dB61CB6d48FB752ED28E15EA48A4aD6",
+      "riskTier": 0,
+      "fraudScore": 0
+    },
+    "BK-1776566097341": {
+      "bookingId": "BK-1776566097341",
+      "walletAddress": "0x1C05AF5fa32b26AfD0431fA65802d75385cAD09a",
+      "releaseTxHash": "0xac7abac4e20829fb5cc6fa525d5cfe58f11287438a5466f8ab2151482620bc35",
+      "deliveredAt": "2026-04-19T02:35:33.097Z",
+      "proofType": "OTP",
+      "agentAddress": "0xacc1f6E32dB61CB6d48FB752ED28E15EA48A4aD6",
+      "riskTier": 0,
+      "fraudScore": 0
+    },
+    "BK-1776573311386": {
+      "bookingId": "BK-1776573311386",
+      "walletAddress": "0x44d37cA930B2d7Bd06BA820F2DfAD9a317324B9b",
+      "releaseTxHash": "0xe8c0d8a4f834c351b9423f5816def2f0f61539c9047c1ccaa2941b46745b7905",
+      "deliveredAt": "2026-04-19T04:36:38.627Z",
       "proofType": "OTP",
       "agentAddress": "0xacc1f6E32dB61CB6d48FB752ED28E15EA48A4aD6",
       "riskTier": 0,

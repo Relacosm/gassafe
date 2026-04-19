@@ -43,6 +43,15 @@ router.get("/deliveries/pending", (req, res) => {
   res.json({ bookings: pending });
 });
 
+// Get completed deliveries
+router.get("/deliveries/completed", (req, res) => {
+  const db = readDB();
+  const completed = Object.values(db.bookings)
+    .filter(b => b.status === "DELIVERED")
+    .sort((a, b) => new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt));
+  res.json({ bookings: completed });
+});
+
 // Get all bookings for a wallet
 router.get("/bookings/:wallet", (req, res) => {
   const db = readDB();
@@ -111,6 +120,21 @@ router.get("/stats", (req, res) => {
     merkleRoot: computeMerkleRoot(),
     contractConfig: chain.getContractConfig()
   });
+});
+
+// ── AI Chatbot ─────────────────────────────────────────────────
+const { chat } = require("../agents/chatAgent");
+
+router.post("/chat", async (req, res) => {
+  try {
+    const { history = [], message } = req.body;
+    if (!message?.trim()) return res.status(400).json({ error: "Message required" });
+    const { reply, toolCalls } = await chat(history, message);
+    res.json({ reply, toolCalls });
+  } catch (e) {
+    console.error("[ChatAgent]", e.message);
+    res.status(500).json({ error: "AI agent unavailable: " + e.message });
+  }
 });
 
 module.exports = router;
